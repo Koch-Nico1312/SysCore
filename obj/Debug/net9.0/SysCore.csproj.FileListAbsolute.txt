@@ -1,0 +1,37 @@
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.csproj.AssemblyReference.cache
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.AssemblyInfoInputs.cache
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.AssemblyInfo.cs
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.csproj.CoreCompileInputs.cache
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.sourcelink.json
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\SysCore.exe
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\SysCore.deps.json
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\SysCore.runtimeconfig.json
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\SysCore.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\SysCore.pdb
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\Start screen.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\Start screen.pdb
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.csproj.Up2Date
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\refint\SysCore.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.pdb
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\SysCore.genruntimeconfig.cache
+c:\Users\kochn_lrehka5\Desktop\SysCore\obj\Debug\net9.0\ref\SysCore.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\LoginPage.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\LoginPage.pdb
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\NAudio.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\NAudio.Asio.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\NAudio.Core.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\NAudio.Midi.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\NAudio.Wasapi.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\NAudio.WinMM.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\QRCoder.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\System.Diagnostics.EventLog.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\System.Diagnostics.PerformanceCounter.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\runtimes\win\lib\net9.0\System.Diagnostics.EventLog.Messages.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\runtimes\win\lib\net9.0\System.Diagnostics.EventLog.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\runtimes\win\lib\net9.0\System.Diagnostics.PerformanceCounter.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\Admin.dll
+c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\Admin.pdb
