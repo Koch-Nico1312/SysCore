@@ -2,6 +2,11 @@ using System.Runtime.InteropServices;
 
 namespace AdminApp;
 
+// WICHTIG FÜR DICH:
+// Diese Datei kapselt Windows-API-Aufrufe für Konsolen-Eingaben (Maus, Tasten, Fenstergröße).
+// Begriffe wie DllImport, StructLayout, FieldOffset und nint sind fortgeschritten.
+// Wir lassen das so, weil es für die Windows-Konsole technisch nötig ist.
+// Du musst das jetzt noch nicht im Detail beherrschen.
 internal static class ConsoleInputWindows
 {
     internal const int StdInputHandle = -10;
@@ -13,12 +18,15 @@ internal static class ConsoleInputWindows
     internal const uint FromLeft1stButtonPressed = 0x0001;
     internal const uint MouseMoved = 0x0001;
 
+    // Liest ein Handle auf die Standard-Eingabe der Konsole.
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern nint GetStdHandle(int nStdHandle);
 
+    // Fragt ab, wie viele Eingabe-Events anstehen.
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern bool GetNumberOfConsoleInputEvents(nint hConsoleInput, out uint lpcNumberOfEvents);
 
+    // Liest Events (Taste/Maus/Fensteränderung) aus der Windows-Konsole.
     [DllImport("kernel32.dll", EntryPoint = "ReadConsoleInputW", CharSet = CharSet.Unicode, SetLastError = true)]
     internal static extern bool ReadConsoleInput(
         nint hConsoleInput,
@@ -26,12 +34,15 @@ internal static class ConsoleInputWindows
         uint nLength,
         out uint lpNumberOfEventsRead);
 
+    // Liest den aktuellen Konsolenmodus.
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern bool GetConsoleMode(nint hConsoleHandle, out uint lpMode);
 
+    // Setzt den Konsolenmodus.
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern bool SetConsoleMode(nint hConsoleHandle, uint dwMode);
 
+    // Wartet auf Eingabe für maximal X Millisekunden.
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern uint WaitForSingleObject(nint hHandle, uint dwMilliseconds);
 
@@ -78,6 +89,7 @@ internal static class ConsoleInputWindows
         internal MouseEventRecord MouseEvent;
     }
 
+    // Aktiviert Maus- und Fenster-Events in der Konsole.
     internal static void EnableMouseAndWindowInput()
     {
         nint hIn = GetStdHandle(StdInputHandle);
@@ -94,6 +106,7 @@ internal static class ConsoleInputWindows
         SetConsoleMode(hIn, mode);
     }
 
+    // Versucht genau EIN Event zu lesen.
     internal static bool TryReadOneInput(nint hIn, out InputRecord record, out bool hasRecord)
     {
         record = default;
@@ -113,6 +126,7 @@ internal static class ConsoleInputWindows
         return true;
     }
 
+    // Wartet kurz auf neue Eingaben; Fallback über Sleep ohne gültiges Handle.
     internal static void WaitForInput(nint hIn, int milliseconds)
     {
         if (hIn == nint.Zero || hIn == new nint(-1))
@@ -124,3 +138,7 @@ internal static class ConsoleInputWindows
         WaitForSingleObject(hIn, (uint)milliseconds);
     }
 }
+
+// Was macht diese Datei?
+// - Kapselt native Windows-Konsolenfunktionen (Tastatur, Maus, Fenster-Events).
+// - Liefert einfache Hilfsmethoden, die der restliche Admin-Code aufruft.

@@ -9,7 +9,8 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    private void EinheitenrechnerAusfuehren()
+    // Einfache Auswahl für typische Umrechnungen.
+    private void RunUnitConverter()
     {
         Console.WriteLine("=== Einheitenrechner ===");
         bool fertig = false;
@@ -45,39 +46,46 @@ public sealed partial class AdminPortal
         }
     }
 
+    // Kilometer in Meter.
     private static void EinheitKmNachM(double km)
     {
         Console.WriteLine((km * 1000.0).ToString("0.###", CultureInfo.InvariantCulture) + " m");
     }
 
+    // Meter in Kilometer.
     private static void EinheitMNachKm(double m)
     {
         Console.WriteLine((m / 1000.0).ToString("0.######", CultureInfo.InvariantCulture) + " km");
     }
 
+    // Kilogramm in Pound.
     private static void EinheitKgNachLb(double kg)
     {
         Console.WriteLine((kg * 2.2046226218).ToString("0.###", CultureInfo.InvariantCulture) + " lb");
     }
 
+    // Pound in Kilogramm.
     private static void EinheitLbNachKg(double lb)
     {
         Console.WriteLine((lb / 2.2046226218).ToString("0.###", CultureInfo.InvariantCulture) + " kg");
     }
 
+    // Celsius in Fahrenheit.
     private static void EinheitCelsiusNachFahrenheit(double c)
     {
         double f = c * 9.0 / 5.0 + 32.0;
         Console.WriteLine(f.ToString("0.###", CultureInfo.InvariantCulture) + " °F");
     }
 
+    // Fahrenheit in Celsius.
     private static void EinheitFahrenheitNachCelsius(double f)
     {
         double c = (f - 32.0) * 5.0 / 9.0;
         Console.WriteLine(c.ToString("0.###", CultureInfo.InvariantCulture) + " °C");
     }
 
-    private void TaschenrechnerMitVerlaufAusfuehren()
+    // Taschenrechner mit Textausdruck und Verlauf.
+    private void RunCalculatorWithHistory()
     {
         Console.WriteLine("=== Taschenrechner (Ausdruck, z. B. 3+4*2) ===");
         List<string> verlauf = [];
@@ -95,14 +103,14 @@ public sealed partial class AdminPortal
 
             if (ausdruck.Equals("verlauf", StringComparison.OrdinalIgnoreCase))
             {
-                TaschenrechnerVerlaufDrucken(verlauf);
+                PrintCalculatorHistory(verlauf);
                 continue;
             }
 
             if (ausdruck.Length == 0)
                 continue;
 
-            string? ergebnisText = TaschenrechnerAusdruckAuswerten(ausdruck);
+            string? ergebnisText = EvaluateCalculatorExpression(ausdruck);
             if (ergebnisText == null)
             {
                 Console.WriteLine("Ungültiger Ausdruck.");
@@ -114,21 +122,26 @@ public sealed partial class AdminPortal
         }
     }
 
-    private static void TaschenrechnerVerlaufDrucken(List<string> verlauf)
+    // Gibt alle bisherigen Rechnungen aus.
+    private static void PrintCalculatorHistory(List<string> history)
     {
-        if (verlauf.Count == 0)
+        if (history.Count == 0)
         {
             Console.WriteLine("(leer)");
             return;
         }
 
-        foreach (string z in verlauf)
+        foreach (string z in history)
             Console.WriteLine(z);
     }
 
-    private static string? TaschenrechnerAusdruckAuswerten(string ausdruck)
+    // WICHTIG:
+    // DataTable.Compute ist eine eingebaute .NET-Funktion, die einen Mathe-Ausdruck als Text auswertet.
+    // Das ist eher fortgeschritten und nicht der typische Anfänger-Weg.
+    // Wir behalten es hier, damit das Verhalten exakt gleich bleibt.
+    private static string? EvaluateCalculatorExpression(string expression)
     {
-        string norm = ausdruck.Replace(',', '.');
+        string norm = expression.Replace(',', '.');
         object? ergebnis = new DataTable().Compute(norm, null);
         if (ergebnis == null || ergebnis == DBNull.Value)
             return null;
@@ -145,7 +158,8 @@ public sealed partial class AdminPortal
         return ergebnis.ToString();
     }
 
-    private void CaesarWerkzeugAusfuehren()
+    // Caesar-Dialog: Modus wählen, Verschiebung prüfen, Text umwandeln.
+    private void RunCaesarTool()
     {
         Console.WriteLine("=== Caesar ===");
         Console.Write("1=verschlüsseln 2=entschlüsseln: ");
@@ -162,6 +176,7 @@ public sealed partial class AdminPortal
         Console.WriteLine(outText);
     }
 
+    // Führt die Caesar-Verschiebung für jeden Buchstaben durch.
     private static string CaesarTextTransformieren(string text, int shift, bool verschluesseln)
     {
         int s = verschluesseln ? shift : 26 - shift;
@@ -189,7 +204,8 @@ public sealed partial class AdminPortal
         return sb.ToString();
     }
 
-    private void TextAnalyzerAusfuehren()
+    // Liest mehrzeiligen Text ein und zeigt einfache Kennzahlen.
+    private void RunTextAnalyzer()
     {
         Console.WriteLine("=== Text Analyzer ===");
         Console.WriteLine("Text (leere Zeile beendet):");
@@ -207,7 +223,7 @@ public sealed partial class AdminPortal
         string voll = sb.ToString();
         int woerter = TextAnalyzerWoerterZaehlen(voll);
         int zeichenMitLeer = voll.Length;
-        int zeichenOhneLeer = voll.Count(c => !char.IsWhiteSpace(c));
+        int zeichenOhneLeer = TextAnalyzerZeichenOhneLeerzeichenZaehlen(voll);
         int saetze = TextAnalyzerSaetzeZaehlen(voll);
         Console.WriteLine("Wörter: " + woerter);
         Console.WriteLine("Zeichen (mit Leer): " + zeichenMitLeer);
@@ -215,6 +231,7 @@ public sealed partial class AdminPortal
         Console.WriteLine("Sätze: " + saetze);
     }
 
+    // Zählt Wörter über Leerzeichen-Erkennung.
     private static int TextAnalyzerWoerterZaehlen(string text)
     {
         int n = 0;
@@ -235,6 +252,7 @@ public sealed partial class AdminPortal
         return n;
     }
 
+    // Zählt Satzenden über . ! ?
     private static int TextAnalyzerSaetzeZaehlen(string text)
     {
         int n = 0;
@@ -249,7 +267,21 @@ public sealed partial class AdminPortal
         return n;
     }
 
-    private void WaehrungsrechnerAusfuehren()
+    // Ohne LINQ: Zeichen zählen, die keine Leerzeichen sind.
+    private static int TextAnalyzerZeichenOhneLeerzeichenZaehlen(string text)
+    {
+        int anzahl = 0;
+        foreach (char c in text)
+        {
+            if (!char.IsWhiteSpace(c))
+                anzahl++;
+        }
+
+        return anzahl;
+    }
+
+    // Nutzt eine Online-API für Wechselkurse.
+    private void RunCurrencyConverter()
     {
         Console.WriteLine("=== Währungsrechner (Frankfurter API) ===");
         Console.Write("Betrag: ");
@@ -267,34 +299,37 @@ public sealed partial class AdminPortal
 
         string url = string.Format(CultureInfo.InvariantCulture,
             "https://api.frankfurter.app/latest?from={0}&to={1}", v, n);
-        using HttpClient client = HttpClientFuerApiErzeugen();
+        using HttpClient client = CreateHttpClientForApi();
         HttpResponseMessage resp = client.GetAsync(url).GetAwaiter().GetResult();
         string json = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-        decimal kurs = WaehrungsJsonKursLesen(json, n);
+        decimal kurs = ReadCurrencyRateFromJson(json, n);
         decimal ergebnis = betrag * kurs;
         Console.WriteLine(ergebnis.ToString("0.00", CultureInfo.InvariantCulture) + " " + n);
     }
 
-    private static HttpClient HttpClientFuerApiErzeugen()
+    // Erstellt einen HttpClient mit Timeout.
+    private static HttpClient CreateHttpClientForApi()
     {
         HttpClient c = new();
         c.Timeout = TimeSpan.FromSeconds(20);
         return c;
     }
 
-    private static decimal WaehrungsJsonKursLesen(string json, string zielIso)
+    // Liest den Kurs aus dem JSON der API.
+    private static decimal ReadCurrencyRateFromJson(string json, string targetIso)
     {
         using JsonDocument doc = JsonDocument.Parse(json);
         JsonElement root = doc.RootElement;
         if (!root.TryGetProperty("rates", out JsonElement rates))
             return 0m;
-        if (rates.TryGetProperty(zielIso, out JsonElement wert))
+        if (rates.TryGetProperty(targetIso, out JsonElement wert))
             return wert.GetDecimal();
 
         return 0m;
     }
 
-    private void QrCodeGeneratorAusfuehren()
+    // Baut einen QR-Code als ASCII-Ausgabe.
+    private void RunQrCodeGenerator()
     {
         Console.WriteLine("=== QR-Code (Text) ===");
         Console.Write("Inhalt: ");
@@ -309,7 +344,8 @@ public sealed partial class AdminPortal
         Console.WriteLine(art);
     }
 
-    private void DatumrechnerAusfuehren()
+    // Berechnet die Tage zwischen zwei Datumswerten.
+    private void RunDateCalculator()
     {
         Console.WriteLine("=== Datumrechner ===");
         Console.Write("Erstes Datum (dd.MM.yyyy): ");
@@ -327,3 +363,8 @@ public sealed partial class AdminPortal
         Console.WriteLine("Tage zwischen den Daten: " + tage);
     }
 }
+
+// Was macht diese Datei?
+// - Enthält mehrere Tools: Umrechner, Taschenrechner, Caesar, Textanalyse,
+//   Währungsrechner, QR-Code und Datumrechner.
+// - Jede Methode ist ein einzelnes Werkzeug im Admin-Menü.

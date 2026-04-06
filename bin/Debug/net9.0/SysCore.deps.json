@@ -9,7 +9,8 @@
       "SysCore/1.0.0": {
         "dependencies": {
           "Admin": "1.0.0",
-          "LoginPage": "1.0.0"
+          "LoginPage": "1.0.0",
+          "casualUser": "1.0.0"
         },
         "runtime": {
           "SysCore.dll": {}
@@ -180,6 +181,14 @@
           }
         }
       },
+      "casualUser/1.0.0": {
+        "runtime": {
+          "casualUser.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "LoginPage/1.0.0": {
         "runtime": {
           "LoginPage.dll": {
@@ -310,6 +319,11 @@
       "hashPath": "system.security.principal.windows.4.7.0.nupkg.sha512"
     },
     "Admin/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "casualUser/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

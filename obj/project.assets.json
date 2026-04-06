@@ -294,6 +294,16 @@
           "bin/placeholder/Admin.dll": {}
         }
       },
+      "casualUser/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/casualUser.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/casualUser.dll": {}
+        }
+      },
       "LoginPage/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
@@ -729,6 +739,11 @@
       "path": "Admin/Admin.csproj",
       "msbuildProject": "Admin/Admin.csproj"
     },
+    "casualUser/1.0.0": {
+      "type": "project",
+      "path": "casualUser/casualUser.csproj",
+      "msbuildProject": "casualUser/casualUser.csproj"
+    },
     "LoginPage/1.0.0": {
       "type": "project",
       "path": "LoginPage/LoginPage.csproj",
@@ -744,7 +759,8 @@
     "net9.0": [
       "Admin >= 1.0.0",
       "LoginPage >= 1.0.0",
-      "Start screen >= 1.0.0"
+      "Start screen >= 1.0.0",
+      "casualUser >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -782,6 +798,9 @@
           "projectReferences": {
             "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\Admin\\Admin.csproj": {
               "projectPath": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\Admin\\Admin.csproj"
+            },
+            "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\casualUser\\casualUser.csproj": {
+              "projectPath": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\casualUser\\casualUser.csproj"
             },
             "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\LoginPage\\LoginPage.csproj": {
               "projectPath": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\LoginPage\\LoginPage.csproj"

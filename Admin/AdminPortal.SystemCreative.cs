@@ -8,7 +8,8 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    private void SystemMonitorNachPlattformStarten()
+    // Einstiegspunkt für den Systemmonitor.
+    private void RunSystemMonitorByPlatform()
     {
         Console.WriteLine("=== System Monitor ===");
         if (!OperatingSystem.IsWindows())
@@ -17,15 +18,18 @@ public sealed partial class AdminPortal
             return;
         }
 
-        SystemMonitorWindowsAusfuehren();
+        RunSystemMonitorWindows();
     }
 
+    // WICHTIG:
+    // Diese Methode nutzt PerformanceCounter (Windows-System-API).
+    // Das ist fortgeschritten, wir behalten es für die gleiche Funktion.
     [SupportedOSPlatform("windows")]
-    private void SystemMonitorWindowsAusfuehren()
+    private void RunSystemMonitorWindows()
     {
         using PerformanceCounter cpu = new("Processor", "% Processor Time", "_Total");
         using PerformanceCounter ram = new("Memory", "Available MBytes");
-        SystemMonitorErstenCpuWertLesen(cpu);
+        ReadFirstSystemMonitorCpuValue(cpu);
         Console.WriteLine("Live — Taste drücken zum Beenden.");
         while (true)
         {
@@ -38,25 +42,28 @@ public sealed partial class AdminPortal
 
             float c = cpu.NextValue();
             float freiMb = ram.NextValue();
-            SystemMonitorZeileSchreiben(c, freiMb);
+            WriteSystemMonitorLine(c, freiMb);
             Thread.Sleep(700);
         }
     }
 
+    // Liest einen ersten CPU-Wert, damit Folgemessungen realistischer sind.
     [SupportedOSPlatform("windows")]
-    private static void SystemMonitorErstenCpuWertLesen(PerformanceCounter cpu)
+    private static void ReadFirstSystemMonitorCpuValue(PerformanceCounter cpu)
     {
         _ = cpu.NextValue();
         Thread.Sleep(300);
     }
 
-    private static void SystemMonitorZeileSchreiben(float cpuProzent, float ramFreiMb)
+    // Schreibt eine Live-Zeile für CPU/RAM.
+    private static void WriteSystemMonitorLine(float cpuPercent, float ramFreeMb)
     {
-        string zeile = string.Format(CultureInfo.InvariantCulture, "CPU (gesamt): {0:0.#} %   RAM frei: {1:0} MB", cpuProzent, ramFreiMb);
+        string zeile = string.Format(CultureInfo.InvariantCulture, "CPU (gesamt): {0:0.#} %   RAM frei: {1:0} MB", cpuPercent, ramFreeMb);
         Console.Write("\r" + zeile.PadRight(Console.WindowWidth > 0 ? Console.WindowWidth - 1 : 60));
     }
 
-    private void AsciiArtGeneratorAusfuehren()
+    // ASCII-Art Generator für einfachen Text.
+    private void RunAsciiArtGenerator()
     {
         Console.WriteLine("=== ASCII Art ===");
         Console.Write("Text (A-Z, 0-9, Leerzeichen): ");
@@ -64,12 +71,13 @@ public sealed partial class AdminPortal
         string text = t ?? "";
         if (text.Length == 0)
             return;
-        string[] zeilen = AsciiArtZeilenFuerTextErzeugen(text.ToUpperInvariant());
+        string[] zeilen = BuildAsciiArtLinesForText(text.ToUpperInvariant());
         foreach (string z in zeilen)
             Console.WriteLine(z);
     }
 
-    private static string[] AsciiArtZeilenFuerTextErzeugen(string text)
+    // Baut die Ausgabezeilen für den gesamten Text.
+    private static string[] BuildAsciiArtLinesForText(string text)
     {
         const int hoehe = 5;
         string[] ausgabe = new string[hoehe];
@@ -78,7 +86,7 @@ public sealed partial class AdminPortal
             StringBuilder zeile = new();
             foreach (char c in text)
             {
-                string[] muster = AsciiArtMusterFuerZeichen(c);
+                string[] muster = GetAsciiArtPatternForCharacter(c);
                 if (r < muster.Length)
                     zeile.Append(muster[r]).Append(' ');
             }
@@ -89,13 +97,14 @@ public sealed partial class AdminPortal
         return ausgabe;
     }
 
-    private static string[] AsciiArtMusterFuerZeichen(char c)
+    // Gibt Muster für ein Zeichen zurück.
+    private static string[] GetAsciiArtPatternForCharacter(char c)
     {
         if (c == ' ')
             return ["  ", "  ", "  ", "  ", "  "];
 
         if (c is >= '0' and <= '9')
-            return AsciiArtZifferMuster(c);
+            return GetAsciiArtDigitPattern(c);
 
         return c switch
         {
@@ -129,7 +138,8 @@ public sealed partial class AdminPortal
         };
     }
 
-    private static string[] AsciiArtZifferMuster(char c)
+    // Gibt Muster für Ziffern zurück.
+    private static string[] GetAsciiArtDigitPattern(char c)
     {
         return c switch
         {
@@ -147,38 +157,104 @@ public sealed partial class AdminPortal
         };
     }
 
-    private void FarbpalettenGeneratorAusfuehren()
+    // Zeigt ein eigenes Auswahlmenü und übernimmt das Theme ins Admin-Layout.
+    private void RunColorPaletteGenerator()
     {
-        Console.WriteLine("=== Farbpaletten ===");
-        Random r = new();
-        for (int i = 0; i < 5; i++)
+        if (!Console.IsOutputRedirected)
         {
-            double basis = r.NextDouble() * 360.0;
-            FarbpaletteFuenfToeneDrucken(basis);
-            Console.WriteLine();
+            Console.Clear();
+            Console.ResetColor();
+        }
+
+        Console.WriteLine("=== Color Palette ===");
+        Console.WriteLine();
+        Console.WriteLine("1) Midnight Noir      BG #000000  FG #808000  ACC #808080");
+        Console.WriteLine("2) Neon Tokyo         BG #800080  FG #FFFFFF  ACC #00FFFF");
+        Console.WriteLine("3) Forest Dusk        BG #000000  FG #008000  ACC #008000");
+        Console.WriteLine("4) Arctic Frost       BG #008080  FG #FFFFFF  ACC #0000FF");
+        Console.WriteLine("5) Lava Flow          BG #800000  FG #FFFF00  ACC #FFFF00");
+        Console.WriteLine();
+        Console.Write("Choose (1-5): ");
+        string? input = Console.ReadLine();
+        string choice = input?.Trim() ?? "";
+
+        switch (choice)
+        {
+            case "1":
+                SetAdminTheme(
+                    primary: ConsoleColor.DarkYellow,
+                    accent: ConsoleColor.DarkGray,
+                    background: ConsoleColor.Black,
+                    highlightForeground: ConsoleColor.White,
+                    highlightBackground: ConsoleColor.DarkYellow);
+                break;
+            case "2":
+                SetAdminTheme(
+                    primary: ConsoleColor.White,
+                    accent: ConsoleColor.Cyan,
+                    background: ConsoleColor.DarkMagenta,
+                    highlightForeground: ConsoleColor.White,
+                    highlightBackground: ConsoleColor.DarkBlue);
+                break;
+            case "3":
+                SetAdminTheme(
+                    primary: ConsoleColor.Green,
+                    accent: ConsoleColor.DarkGreen,
+                    background: ConsoleColor.Black,
+                    highlightForeground: ConsoleColor.White,
+                    highlightBackground: ConsoleColor.DarkGreen);
+                break;
+            case "4":
+                SetAdminTheme(
+                    primary: ConsoleColor.White,
+                    accent: ConsoleColor.Blue,
+                    background: ConsoleColor.DarkCyan,
+                    highlightForeground: ConsoleColor.White,
+                    highlightBackground: ConsoleColor.Blue);
+                break;
+            case "5":
+                SetAdminTheme(
+                    primary: ConsoleColor.Yellow,
+                    accent: ConsoleColor.Yellow,
+                    background: ConsoleColor.DarkRed,
+                    highlightForeground: ConsoleColor.White,
+                    highlightBackground: ConsoleColor.Red);
+                break;
+            default:
+                return;
         }
     }
 
-    private static void FarbpaletteFuenfToeneDrucken(double startHue)
+    // Schreibt einen HEX-Farbwert eingefärbt in die Konsole.
+    private static void WritePaletteHexColor(string hex)
     {
-        for (int i = 0; i < 5; i++)
+        if (hex.Length == 7 && hex[0] == '#'
+            && int.TryParse(hex.AsSpan(1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int r)
+            && int.TryParse(hex.AsSpan(3, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int g)
+            && int.TryParse(hex.AsSpan(5, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int b))
         {
-            double h = (startHue + i * 18.0) % 360.0;
-            FarbeAusHsvNachKonsole(h, 0.75, 0.72);
+            Console.ForegroundColor = PickClosestConsoleColor(r, g, b);
+            Console.WriteLine(hex);
+            Console.ResetColor();
+            return;
         }
+
+        Console.WriteLine(hex);
     }
 
-    private static void FarbeAusHsvNachKonsole(double h, double s, double v)
+    // Rechnet HSV in RGB um und schreibt die Hex-Farbe.
+    private static void WriteConsoleColorFromHsv(double h, double s, double v)
     {
-        HsvZuRgbUmrechnen(h, s, v, out int rr, out int gg, out int bb);
+        ConvertHsvToRgb(h, s, v, out int rr, out int gg, out int bb);
         string hex = string.Format(CultureInfo.InvariantCulture, "#{0:X2}{1:X2}{2:X2}", rr, gg, bb);
-        ConsoleColor vordergrund = FarbeConsoleAmNaechstenWaehlen(rr, gg, bb);
+        ConsoleColor vordergrund = PickClosestConsoleColor(rr, gg, bb);
         Console.ForegroundColor = vordergrund;
         Console.Write(hex + "  ");
         Console.ResetColor();
     }
 
-    private static void HsvZuRgbUmrechnen(double h, double s, double v, out int r, out int g, out int b)
+    // Mathematische Umrechnung HSV -> RGB.
+    private static void ConvertHsvToRgb(double h, double s, double v, out int r, out int g, out int b)
     {
         double c = v * s;
         double x = c * (1 - Math.Abs(h / 60.0 % 2 - 1));
@@ -220,16 +296,18 @@ public sealed partial class AdminPortal
         b = ClampByte((bp + m) * 255.0);
     }
 
-    private static int ClampByte(double wert)
+    // Begrenzung auf Byte-Bereich 0..255.
+    private static int ClampByte(double value)
     {
-        if (wert < 0)
+        if (value < 0)
             return 0;
-        if (wert > 255)
+        if (value > 255)
             return 255;
-        return (int)Math.Round(wert, MidpointRounding.AwayFromZero);
+        return (int)Math.Round(value, MidpointRounding.AwayFromZero);
     }
 
-    private static ConsoleColor FarbeConsoleAmNaechstenWaehlen(int r, int g, int b)
+    // Wählt eine ungefähr passende Konsolenfarbe.
+    private static ConsoleColor PickClosestConsoleColor(int r, int g, int b)
     {
         int grau = (r + g + b) / 3;
         if (grau < 85)
@@ -247,7 +325,9 @@ public sealed partial class AdminPortal
         return ConsoleColor.Gray;
     }
 
-    private void MusikPlayerAusfuehren()
+    // Spielt eine MP3-Datei ab.
+    // Hinweis: NAudio ist eine externe Bibliothek für Audio.
+    private void RunMusicPlayer()
     {
         Console.WriteLine("=== Musik Player (MP3) ===");
         Console.Write("Pfad zur MP3: ");
@@ -265,10 +345,11 @@ public sealed partial class AdminPortal
         ausgabe.Init(reader);
         ausgabe.Play();
         Console.WriteLine("Wiedergabe — Taste zum Stoppen.");
-        MusikWiedergabeSchleife(ausgabe);
+        RunMusicPlaybackLoop(ausgabe);
         ausgabe.Stop();
     }
 
+    // Entfernt unnötige Anführungszeichen am Pfad.
     private static string MusikPfadBereinigen(string roh)
     {
         string t = roh.Trim();
@@ -277,9 +358,10 @@ public sealed partial class AdminPortal
         return t;
     }
 
-    private static void MusikWiedergabeSchleife(WaveOutEvent ausgabe)
+    // Wartet auf Tastendruck zum Stoppen der Wiedergabe.
+    private static void RunMusicPlaybackLoop(WaveOutEvent output)
     {
-        while (ausgabe.PlaybackState == PlaybackState.Playing)
+        while (output.PlaybackState == PlaybackState.Playing)
         {
             if (Console.KeyAvailable)
             {
@@ -291,3 +373,7 @@ public sealed partial class AdminPortal
         }
     }
 }
+
+// Was macht diese Datei?
+// - Enthält kreative/systemnahe Tools: Systemmonitor, ASCII-Art, Farbpaletten, Musikplayer.
+// - Nutzt teils fortgeschrittene APIs (PerformanceCounter/NAudio), damit die Features funktionieren.

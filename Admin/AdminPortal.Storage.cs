@@ -2,6 +2,7 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
+    // Ermittelt den App-Datenordner und legt ihn bei Bedarf an.
     private static string SysCoreDatenVerzeichnisErmitteln()
     {
         string basis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -10,45 +11,56 @@ public sealed partial class AdminPortal
         return ordner;
     }
 
-    private static string AufgabenDateiPfadBilden()
+    // Pfad für die Aufgaben-Datei.
+    private static string BuildTasksFilePath()
     {
         return Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "admin_aufgaben.txt");
     }
 
-    private static string NotizenOrdnerPfadBilden()
+    // Pfad für den Notizen-Ordner.
+    private static string BuildNotesFolderPath()
     {
         string n = Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "notizen");
         Directory.CreateDirectory(n);
         return n;
     }
 
-    private static string PasswortTresorPfadBilden()
+    // Pfad für den Passwort-Tresor.
+    private static string BuildPasswordVaultPath()
     {
         return Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "admin_passwort_tresor.txt");
     }
 
-    private static byte[] MasterSchluesselAusPasswortErzeugen(string masterPasswort)
+    // Erzeugt aus dem Master-Passwort einen festen Schlüssel (SHA256).
+    private static byte[] CreateMasterKeyFromPassword(string masterPassword)
     {
-        return System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(masterPasswort));
+        return System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(masterPassword));
     }
 
-    private static string TextMitSchluesselXorVerschleiern(string klartext, byte[] schluessel)
+    // Sehr einfache XOR-"Verschleierung" für gespeicherte Textdaten.
+    // Hinweis: Das ist kein starker Schutz wie moderne Verschlüsselung.
+    private static string ObfuscateTextWithXorKey(string plainText, byte[] key)
     {
-        byte[] p = System.Text.Encoding.UTF8.GetBytes(klartext);
+        byte[] p = System.Text.Encoding.UTF8.GetBytes(plainText);
         byte[] o = new byte[p.Length];
         for (int i = 0; i < p.Length; i++)
-            o[i] = (byte)(p[i] ^ schluessel[i % schluessel.Length]);
+            o[i] = (byte)(p[i] ^ key[i % key.Length]);
 
         return Convert.ToBase64String(o);
     }
 
-    private static string TextMitSchluesselXorZurueck(string base64, byte[] schluessel)
+    // Hebt die XOR-Verschleierung wieder auf.
+    private static string RestoreTextWithXorKey(string base64, byte[] key)
     {
         byte[] p = Convert.FromBase64String(base64);
         byte[] o = new byte[p.Length];
         for (int i = 0; i < p.Length; i++)
-            o[i] = (byte)(p[i] ^ schluessel[i % schluessel.Length]);
+            o[i] = (byte)(p[i] ^ key[i % key.Length]);
 
         return System.Text.Encoding.UTF8.GetString(o);
     }
 }
+
+// Was macht diese Datei?
+// - Bündelt Dateipfade für Admin-Daten.
+// - Enthält Hilfsmethoden zum Speichern/Laden verschleierter Passwort-Inhalte.

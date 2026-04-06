@@ -5,14 +5,16 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    private sealed class AufgabeEintrag
+    // Kleine Datenklasse für eine Aufgabe.
+    private sealed class TaskEntry
     {
         internal string Titel = "";
         internal DateTime Deadline;
         internal bool Erledigt;
     }
 
-    private void TaskManagerAusfuehren()
+    // Hauptmenü vom Task-Manager.
+    private void RunTaskManager()
     {
         Console.WriteLine("=== Task Manager ===");
         bool fertig = false;
@@ -29,17 +31,18 @@ public sealed partial class AdminPortal
             }
 
             if (k == "1")
-                TaskManagerListeAnzeigen();
+                ShowTaskManagerList();
             else if (k == "2")
-                TaskManagerNeueAufgabeDialog();
+                ShowTaskManagerNewTaskDialog();
             else if (k == "3")
-                TaskManagerErledigtMarkierenDialog();
+                ShowTaskManagerMarkDoneDialog();
         }
     }
 
-    private void TaskManagerListeAnzeigen()
+    // Zeigt alle Aufgaben mit Status an.
+    private void ShowTaskManagerList()
     {
-        List<AufgabeEintrag> liste = AufgabenAusDateiLaden();
+        List<TaskEntry> liste = LoadTasksFromFile();
         if (liste.Count == 0)
         {
             Console.WriteLine("(keine Aufgaben)");
@@ -48,13 +51,14 @@ public sealed partial class AdminPortal
 
         for (int i = 0; i < liste.Count; i++)
         {
-            AufgabeEintrag a = liste[i];
+            TaskEntry a = liste[i];
             string status = a.Erledigt ? "[x]" : "[ ]";
             Console.WriteLine($"{i + 1}. {status} {a.Titel} — {a.Deadline:yyyy-MM-dd}");
         }
     }
 
-    private void TaskManagerNeueAufgabeDialog()
+    // Fragt Titel und Deadline ab und speichert die neue Aufgabe.
+    private void ShowTaskManagerNewTaskDialog()
     {
         Console.Write("Titel: ");
         string? t = Console.ReadLine();
@@ -70,28 +74,30 @@ public sealed partial class AdminPortal
             return;
         }
 
-        List<AufgabeEintrag> liste = AufgabenAusDateiLaden();
-        liste.Add(new AufgabeEintrag { Titel = titel, Deadline = deadline, Erledigt = false });
-        AufgabenInDateiSpeichern(liste);
+        List<TaskEntry> liste = LoadTasksFromFile();
+        liste.Add(new TaskEntry { Titel = titel, Deadline = deadline, Erledigt = false });
+        SaveTasksToFile(liste);
         Console.WriteLine("Gespeichert.");
     }
 
-    private void TaskManagerErledigtMarkierenDialog()
+    // Markiert eine Aufgabe als erledigt.
+    private void ShowTaskManagerMarkDoneDialog()
     {
-        List<AufgabeEintrag> liste = AufgabenAusDateiLaden();
-        TaskManagerListeAnzeigen();
+        List<TaskEntry> liste = LoadTasksFromFile();
+        ShowTaskManagerList();
         Console.Write("Nummer: ");
         string? n = Console.ReadLine();
         if (!int.TryParse(n, out int idx) || idx < 1 || idx > liste.Count)
             return;
         liste[idx - 1].Erledigt = true;
-        AufgabenInDateiSpeichern(liste);
+        SaveTasksToFile(liste);
     }
 
-    private List<AufgabeEintrag> AufgabenAusDateiLaden()
+    // Liest Aufgaben aus der Datei.
+    private List<TaskEntry> LoadTasksFromFile()
     {
-        List<AufgabeEintrag> liste = [];
-        string pfad = AufgabenDateiPfadBilden();
+        List<TaskEntry> liste = [];
+        string pfad = BuildTasksFilePath();
         if (!File.Exists(pfad))
             return liste;
 
@@ -100,7 +106,7 @@ public sealed partial class AdminPortal
             string zeile = roh.Trim();
             if (zeile.Length == 0)
                 continue;
-            AufgabeEintrag? a = AufgabeAusZeileParsen(zeile);
+            TaskEntry? a = ParseTaskFromLine(zeile);
             if (a != null)
                 liste.Add(a);
         }
@@ -108,7 +114,8 @@ public sealed partial class AdminPortal
         return liste;
     }
 
-    private static AufgabeEintrag? AufgabeAusZeileParsen(string zeile)
+    // Wandelt eine Datei-Zeile in ein Aufgaben-Objekt um.
+    private static TaskEntry? ParseTaskFromLine(string zeile)
     {
         string[] teile = zeile.Split('|');
         if (teile.Length < 3)
@@ -117,22 +124,24 @@ public sealed partial class AdminPortal
         if (!DateTime.TryParseExact(teile[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime deadline))
             return null;
         bool erl = teile[2] == "1" || teile[2].Equals("true", StringComparison.OrdinalIgnoreCase);
-        return new AufgabeEintrag { Titel = titel, Deadline = deadline, Erledigt = erl };
+        return new TaskEntry { Titel = titel, Deadline = deadline, Erledigt = erl };
     }
 
-    private void AufgabenInDateiSpeichern(List<AufgabeEintrag> liste)
+    // Schreibt die Aufgabenliste wieder in die Datei.
+    private void SaveTasksToFile(List<TaskEntry> liste)
     {
         StringBuilder sb = new();
-        foreach (AufgabeEintrag a in liste)
+        foreach (TaskEntry a in liste)
         {
             string f = a.Erledigt ? "1" : "0";
             sb.Append(a.Titel.Replace('|', ' ')).Append('|').Append(a.Deadline.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)).Append('|').AppendLine(f);
         }
 
-        File.WriteAllText(AufgabenDateiPfadBilden(), sb.ToString(), Encoding.UTF8);
+        File.WriteAllText(BuildTasksFilePath(), sb.ToString(), Encoding.UTF8);
     }
 
-    private void NotizbuchAusfuehren()
+    // Hauptmenü vom Notizbuch.
+    private void RunNotebook()
     {
         Console.WriteLine("=== Notizbuch ===");
         bool fertig = false;
@@ -149,19 +158,20 @@ public sealed partial class AdminPortal
             }
 
             if (k == "1")
-                NotizbuchListeAnzeigen();
+                ShowNotebookList();
             else if (k == "2")
-                NotizbuchNeuAnlegen();
+                CreateNewNotebookNote();
             else if (k == "3")
-                NotizbuchAnzeigenDialog();
+                ShowNotebookNoteDialog();
             else if (k == "4")
-                NotizbuchSuchenDialog();
+                ShowNotebookSearchDialog();
         }
     }
 
-    private void NotizbuchListeAnzeigen()
+    // Zeigt alle Notiz-Dateien an.
+    private void ShowNotebookList()
     {
-        string ordner = NotizenOrdnerPfadBilden();
+        string ordner = BuildNotesFolderPath();
         string[] dateien = Directory.GetFiles(ordner, "*.txt", SearchOption.TopDirectoryOnly);
         if (dateien.Length == 0)
         {
@@ -173,11 +183,12 @@ public sealed partial class AdminPortal
             Console.WriteLine(Path.GetFileNameWithoutExtension(pfad));
     }
 
-    private void NotizbuchNeuAnlegen()
+    // Erstellt eine neue Notizdatei.
+    private void CreateNewNotebookNote()
     {
         Console.Write("Titel (Dateiname): ");
         string? t = Console.ReadLine();
-        string titel = NotizbuchDateinameBereinigen(t?.Trim() ?? "");
+        string titel = SanitizeNotebookFileName(t?.Trim() ?? "");
         if (titel.Length == 0)
             return;
         Console.WriteLine("Text (leere Zeile beendet):");
@@ -192,26 +203,28 @@ public sealed partial class AdminPortal
             inhalt.AppendLine(zeile);
         }
 
-        string pfad = Path.Combine(NotizenOrdnerPfadBilden(), titel + ".txt");
+        string pfad = Path.Combine(BuildNotesFolderPath(), titel + ".txt");
         File.WriteAllText(pfad, inhalt.ToString(), Encoding.UTF8);
         Console.WriteLine("Gespeichert.");
     }
 
-    private static string NotizbuchDateinameBereinigen(string roh)
+    // Macht einen sicheren Dateinamen aus Benutzereingabe.
+    private static string SanitizeNotebookFileName(string raw)
     {
         foreach (char c in Path.GetInvalidFileNameChars())
-            roh = roh.Replace(c, '_');
-        return roh.Trim();
+            raw = raw.Replace(c, '_');
+        return raw.Trim();
     }
 
-    private void NotizbuchAnzeigenDialog()
+    // Zeigt eine vorhandene Notiz komplett an.
+    private void ShowNotebookNoteDialog()
     {
         Console.Write("Titel: ");
         string? t = Console.ReadLine();
-        string titel = NotizbuchDateinameBereinigen(t?.Trim() ?? "");
+        string titel = SanitizeNotebookFileName(t?.Trim() ?? "");
         if (titel.Length == 0)
             return;
-        string pfad = Path.Combine(NotizenOrdnerPfadBilden(), titel + ".txt");
+        string pfad = Path.Combine(BuildNotesFolderPath(), titel + ".txt");
         if (!File.Exists(pfad))
         {
             Console.WriteLine("Nicht gefunden.");
@@ -223,14 +236,15 @@ public sealed partial class AdminPortal
         Console.WriteLine("---");
     }
 
-    private void NotizbuchSuchenDialog()
+    // Sucht in Notiznamen und Notizinhalten.
+    private void ShowNotebookSearchDialog()
     {
         Console.Write("Suchbegriff: ");
         string? q = Console.ReadLine();
         string needle = q?.Trim() ?? "";
         if (needle.Length == 0)
             return;
-        string ordner = NotizenOrdnerPfadBilden();
+        string ordner = BuildNotesFolderPath();
         string[] dateien = Directory.GetFiles(ordner, "*.txt", SearchOption.TopDirectoryOnly);
         bool fund = false;
         foreach (string pfad in dateien)
@@ -248,7 +262,8 @@ public sealed partial class AdminPortal
             Console.WriteLine("(keine Treffer)");
     }
 
-    private void PasswortManagerAusfuehren()
+    // Hauptmenü vom Passwort-Manager.
+    private void RunPasswordManager()
     {
         Console.WriteLine("=== Passwort Manager (XOR + SHA256) ===");
         Console.Write("Master-Passwort: ");
@@ -256,7 +271,7 @@ public sealed partial class AdminPortal
         string master = m ?? "";
         if (master.Length == 0)
             return;
-        byte[] schluessel = MasterSchluesselAusPasswortErzeugen(master);
+        byte[] schluessel = CreateMasterKeyFromPassword(master);
         bool fertig = false;
         while (!fertig)
         {
@@ -271,17 +286,18 @@ public sealed partial class AdminPortal
             }
 
             if (k == "1")
-                PasswortManagerListeAnzeigen();
+                ShowPasswordManagerList();
             else if (k == "2")
-                PasswortManagerEintragHinzufuegen(schluessel);
+                AddPasswordManagerEntry(schluessel);
             else if (k == "3")
-                PasswortManagerEintragAnzeigen(schluessel);
+                ShowPasswordManagerEntry(schluessel);
         }
     }
 
-    private void PasswortManagerListeAnzeigen()
+    // Listet alle gespeicherten Einträge (nur Namen) auf.
+    private void ShowPasswordManagerList()
     {
-        string pfad = PasswortTresorPfadBilden();
+        string pfad = BuildPasswordVaultPath();
         if (!File.Exists(pfad))
         {
             Console.WriteLine("(leer)");
@@ -299,7 +315,8 @@ public sealed partial class AdminPortal
         }
     }
 
-    private void PasswortManagerEintragHinzufuegen(byte[] schluessel)
+    // Fügt einen neuen Passwort-Eintrag hinzu.
+    private void AddPasswordManagerEntry(byte[] schluessel)
     {
         Console.Write("Bezeichnung: ");
         string? b = Console.ReadLine();
@@ -313,20 +330,21 @@ public sealed partial class AdminPortal
         string? p = Console.ReadLine();
         string pass = p ?? "";
         string nutzlast = user + "\n" + pass;
-        string enc = TextMitSchluesselXorVerschleiern(nutzlast, schluessel);
+        string enc = ObfuscateTextWithXorKey(nutzlast, schluessel);
         string zeile = bez.Replace('|', ' ') + "|" + enc;
-        File.AppendAllText(PasswortTresorPfadBilden(), zeile + Environment.NewLine, Encoding.UTF8);
+        File.AppendAllText(BuildPasswordVaultPath(), zeile + Environment.NewLine, Encoding.UTF8);
         Console.WriteLine("Eintrag gespeichert.");
     }
 
-    private void PasswortManagerEintragAnzeigen(byte[] schluessel)
+    // Zeigt Benutzername und Passwort zu einem Eintrag an.
+    private void ShowPasswordManagerEntry(byte[] schluessel)
     {
         Console.Write("Bezeichnung: ");
         string? b = Console.ReadLine();
         string bez = b?.Trim() ?? "";
         if (bez.Length == 0)
             return;
-        string pfad = PasswortTresorPfadBilden();
+        string pfad = BuildPasswordVaultPath();
         if (!File.Exists(pfad))
             return;
 
@@ -342,7 +360,7 @@ public sealed partial class AdminPortal
             if (!name.Equals(bez, StringComparison.OrdinalIgnoreCase))
                 continue;
             string enc = zeile[(pipe + 1)..];
-            string klar = TextMitSchluesselXorZurueck(enc, schluessel);
+            string klar = RestoreTextWithXorKey(enc, schluessel);
             string[] teile = klar.Split('\n');
             string user = teile.Length > 0 ? teile[0] : "";
             string pass = teile.Length > 1 ? teile[1] : "";
@@ -354,7 +372,8 @@ public sealed partial class AdminPortal
         Console.WriteLine("Nicht gefunden.");
     }
 
-    private void KalenderAusfuehren()
+    // Fragt Jahr/Monat ab und zeichnet Monatsansicht.
+    private void RunCalendar()
     {
         Console.WriteLine("=== Kalender (Monatsansicht) ===");
         Console.Write("Jahr (Enter = jetzt): ");
@@ -369,10 +388,11 @@ public sealed partial class AdminPortal
         if (int.TryParse(m, out int mv) && mv is >= 1 and <= 12)
             monat = mv;
 
-        KalenderMonatZeichnen(jahr, monat);
+        DrawCalendarMonth(jahr, monat);
     }
 
-    private static void KalenderMonatZeichnen(int jahr, int monat)
+    // Zeichnet den Kalender für einen Monat.
+    private static void DrawCalendarMonth(int jahr, int monat)
     {
         CultureInfo de = CultureInfo.GetCultureInfo("de-DE");
         string titel = new DateTime(jahr, monat, 1).ToString("MMMM yyyy", de);
@@ -404,3 +424,7 @@ public sealed partial class AdminPortal
             Console.WriteLine(zeile.ToString().TrimEnd());
     }
 }
+
+// Was macht diese Datei?
+// - Enthält Produktivitäts-Tools: Task-Manager, Notizbuch, Passwort-Manager, Kalender.
+// - Kapselt Dialoge, Dateioperationen und Ausgabe in der Konsole.

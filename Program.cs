@@ -2,6 +2,7 @@
 //Sys Core - an interactive Console Dashboard
 
 using AdminApp;
+using CasualUserApp;
 using LoginPage;
 using StartScreen;
 
@@ -11,7 +12,7 @@ namespace SysCore
     {
         public static void Main(string[] args)
         {
-            var startScreen = new startScreen();
+            var startScreen = new StartScreenView();
             startScreen.ShowStartScreen();
 
             if (!Console.IsOutputRedirected)
@@ -20,13 +21,18 @@ namespace SysCore
                 Console.ResetColor();
             }
 
-            var login = new loginPage();
-            bool istAdmin = login.ShowLogin();
+            var login = new LoginPageView();
+            bool isAdmin = login.ShowLogin();
 
-            if (istAdmin)
+            if (isAdmin)
             {
                 var admin = new AdminPortal();
                 admin.Run();
+            }
+            else
+            {
+                var casual = new CasualPortal();
+                casual.Run();
             }
         }
     }

@@ -19,6 +19,7 @@
     <ProjectReference Include="Start screen\Start screen.csproj" />
     <ProjectReference Include="LoginPage\LoginPage.csproj" />
     <ProjectReference Include="Admin\Admin.csproj" />
+    <ProjectReference Include="casualUser\casualUser.csproj" />
   </ItemGroup>
 
 </Project>

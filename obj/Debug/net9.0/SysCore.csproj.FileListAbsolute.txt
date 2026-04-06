@@ -35,3 +35,5 @@ c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\runtimes\win\lib\net9.0\
 c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\runtimes\win\lib\net9.0\System.Diagnostics.PerformanceCounter.dll
 c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\Admin.dll
 c:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\Admin.pdb
+C:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\casualUser.dll
+C:\Users\kochn_lrehka5\Desktop\SysCore\bin\Debug\net9.0\casualUser.pdb

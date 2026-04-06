@@ -2,15 +2,9 @@ using System.Text;
 
 namespace StartScreen
 {
-    public class startScreen
+    public class StartScreenView
     {
-        /// <summary>Brand name shown in the narrow (framed) layout and under the wide banner.</summary>
         private const string BrandName = "syscore";
-
-        /// <summary>
-        /// Wide FIGlet-style ASCII art spelling <c>SYSCORE</c> (letters S-Y-S-C-O-R-E).
-        /// Shown only when the console is wide enough (~52+ columns for this glyph set).
-        /// </summary>
         private static readonly string[] BannerSyscoreWide =
         [
             @"  /$$$$$$                       /$$$$$$                               ",
@@ -26,10 +20,6 @@ namespace StartScreen
             @"           \______/                                                  "
         ];
 
-        /// <summary>
-        /// Clears the console, draws a centered banner (size depends on <see cref="Console.WindowWidth"/>),
-        /// then runs a short loading animation. Restores cursor and encoding when finished.
-        /// </summary>
         public void ShowStartScreen()
         {
             if (Console.IsOutputRedirected)
@@ -55,16 +45,11 @@ namespace StartScreen
 
             Console.Clear();
             Console.ResetColor();
-
-            // Pick either the large ASCII wordmark or a full-width framed title.
             string[] banner = PickBanner(w);
-
-            // Vertical centering: leave a few rows below for the optional subtitle + loading line.
             int startRow = Math.Max(0, (h - banner.Length - 5) / 2);
             WriteBannerCentered(banner, startRow, w);
 
             int nameRow = startRow + banner.Length;
-            // Under the wide FIGlet, repeat the brand in normal text (lowercase as requested).
             if (ReferenceEquals(banner, BannerSyscoreWide))
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -98,9 +83,6 @@ namespace StartScreen
             }
         }
 
-        /// <summary>
-        /// Returns the wide ASCII banner if it fits inside the window; otherwise a box that scales to <paramref name="windowWidth"/>.
-        /// </summary>
         private static string[] PickBanner(int windowWidth)
         {
             int inner = Math.Max(0, windowWidth - 2);
@@ -109,7 +91,6 @@ namespace StartScreen
             return BuildFramedTitle(windowWidth, BrandName);
         }
 
-        /// <summary>Longest visual line width in the banner (used to decide if the wide art fits).</summary>
         private static int MaxDisplayWidth(IReadOnlyList<string> lines)
         {
             int m = 0;
@@ -121,10 +102,6 @@ namespace StartScreen
             return m;
         }
 
-        /// <summary>
-        /// Approximate terminal column width of <paramref name="s"/> (wide East Asian characters count as 2).
-        /// ASCII FIGlet lines are all width 1 per code point.
-        /// </summary>
         private static int GetDisplayWidth(string s)
         {
             int w = 0;
@@ -144,7 +121,6 @@ namespace StartScreen
             return w;
         }
 
-        /// <summary>Draws each banner line in cyan, horizontally centered within <paramref name="windowWidth"/>.</summary>
         private static void WriteBannerCentered(IReadOnlyList<string> lines, int startRow, int windowWidth)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -165,7 +141,6 @@ namespace StartScreen
             Console.ResetColor();
         }
 
-        /// <summary>Writes a single line of text centered on row <paramref name="row"/>.</summary>
         private static void WriteCentered(string text, int row, int windowWidth)
         {
             if (row < 0 || row >= Console.WindowHeight) return;
@@ -177,27 +152,22 @@ namespace StartScreen
             Console.Write(text);
         }
 
-        /// <summary>Builds a three-line box; inner width tracks the console so narrow terminals still get a full-width frame.</summary>
         private static string[] BuildFramedTitle(int windowWidth, string title)
         {
             int inner = Math.Max(4, windowWidth - 4);
             string top = "╔" + new string('═', inner) + "╗";
             string bottom = "╚" + new string('═', inner) + "╝";
-
             int titleW = GetDisplayWidth(title);
             int pad = Math.Max(0, inner - titleW);
             int left = pad / 2;
             int right = pad - left;
             string mid = "║" + new string(' ', left) + title + new string(' ', right) + "║";
-
             return [top, mid, bottom];
         }
 
-        /// <summary>Centered spinner on one row for <paramref name="duration"/>, then clears that row.</summary>
         private static void RunLoadingLine(int row, int windowWidth, TimeSpan duration)
         {
             if (row < 0 || row >= Console.WindowHeight) return;
-
             var sw = System.Diagnostics.Stopwatch.StartNew();
             ReadOnlySpan<string> spin = ["|", "/", "-", "\\"];
 
@@ -207,14 +177,12 @@ namespace StartScreen
                 string msg = $"Laden… {phase}";
                 int dw = GetDisplayWidth(msg);
                 int pad = Math.Max(0, (windowWidth - dw) / 2);
-
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.SetCursorPosition(0, row);
                 Console.Write(new string(' ', windowWidth));
                 Console.SetCursorPosition(pad, row);
                 Console.Write(msg);
                 Console.ResetColor();
-
                 Thread.Sleep(50);
             }
 

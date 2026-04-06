@@ -2,46 +2,56 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    private int _menueStartZeile;
-    private int _letzteFensterBreite;
-    private int _letzteFensterHoehe;
+    private int _menuStartRow;
+    private int _lastWindowWidth;
+    private int _lastWindowHeight;
 
-    private int ZeigeHauptmenueUndWaehle()
+    // Zeigt das Hauptmenü und gibt den gewählten Index zurück.
+    private int ShowMainMenuAndSelect()
     {
-        return FuehreMenueAus("Admin — Hauptmenü", HauptmenuePunkte, indexBeiEscape: 1, adminHauptmenueAscii: true);
+        return RunMenu("Admin — Hauptmenü", MainMenuItems, indexOnEscape: 6, isAdminMainMenuAscii: true);
     }
 
-    private int ZeigeProgrammListeUndWaehle()
+    // Baut die Programmliste plus "Zurück" und gibt die Auswahl zurück.
+    private int ShowProgramListAndSelect()
     {
-        string[] alle = new string[AdminProgrammEintraege.Length + 1];
-        for (int i = 0; i < AdminProgrammEintraege.Length; i++)
-            alle[i] = AdminProgrammEintraege[i];
-        alle[^1] = "<< Zurück";
-        int gewaehlt = FuehreMenueAus("Programme starten", alle, indexBeiEscape: alle.Length - 1, adminHauptmenueAscii: false);
-        if (gewaehlt == alle.Length - 1)
+        string[] entries = new string[AdminProgramEntries.Length + 1];
+        for (int i = 0; i < AdminProgramEntries.Length; i++)
+            entries[i] = AdminProgramEntries[i];
+        entries[^1] = "<< Zurück";
+        int selected = RunMenu("Programme starten", entries, indexOnEscape: entries.Length - 1, isAdminMainMenuAscii: false);
+        if (selected == entries.Length - 1)
             return -1;
-        return gewaehlt;
+        return selected;
     }
 
-    private int FuehreMenueAus(string titel, IReadOnlyList<string> zeilen, int indexBeiEscape, bool adminHauptmenueAscii)
+    // Zentrale Menü-Logik: zeichnet, liest Eingaben, liefert Auswahl.
+    private int RunMenu(string title, IReadOnlyList<string> lines, int indexOnEscape, bool isAdminMainMenuAscii)
     {
-        int markiert = 0;
-        bool neuZeichnen = true;
+        int selectedIndex = 0;
+        bool redraw = true;
 
         while (true)
         {
-            if (neuZeichnen)
+            if (redraw)
             {
-                MenueZeichnen(titel, zeilen, markiert, adminHauptmenueAscii);
-                neuZeichnen = false;
+                DrawMenu(title, lines, selectedIndex, isAdminMainMenuAscii);
+                redraw = false;
             }
             else
             {
-                int w = Console.WindowWidth;
-                int h = Console.WindowHeight;
-                if (w <= 0) w = 80;
-                if (h <= 0) h = 25;
-                AdminMenueSystemleisteAktualisieren(w, h);
+                if (isAdminMainMenuAscii)
+                {
+                    UpdateAdminRetroTimeAndDate(immediate: false);
+                }
+                else
+                {
+                    int w = Console.WindowWidth;
+                    int h = Console.WindowHeight;
+                    if (w <= 0) w = 80;
+                    if (h <= 0) h = 25;
+                    UpdateAdminMenuSystemBar(w, h);
+                }
             }
 
             if (OperatingSystem.IsWindows() && _consoleInputHandle != nint.Zero && _consoleInputHandle != new nint(-1))
@@ -51,108 +61,99 @@ public sealed partial class AdminPortal
                 {
                     if (rec.EventType == ConsoleInputWindows.WindowBufferSizeEvent)
                     {
-                        neuZeichnen = true;
+                        redraw = true;
                         continue;
                     }
 
                     if (rec.EventType == ConsoleInputWindows.MouseEvent)
                     {
-                        int? aktiv = VerarbeiteMausFuerMenue(rec.MouseEvent, zeilen.Count, ref markiert, ref neuZeichnen);
-                        if (aktiv.HasValue)
-                            return aktiv.Value;
+                        int? active = HandleMouseForMenu(rec.MouseEvent, lines.Count, ref selectedIndex, ref redraw);
+                        if (active.HasValue)
+                            return active.Value;
                     }
 
                     if (rec.EventType == ConsoleInputWindows.KeyEvent)
                     {
                         if (rec.KeyEvent.KeyDown == 0)
                             continue;
-                        int? ergebnis = VerarbeiteTasteFuerMenue(rec.KeyEvent, zeilen.Count, ref markiert, indexBeiEscape);
-                        if (ergebnis.HasValue)
-                            return ergebnis.Value;
-                        neuZeichnen = true;
+                        if (isAdminMainMenuAscii && HandleAdminRetroHotkey(rec.KeyEvent))
+                            continue;
+                        int? result = HandleKeyForMenu(rec.KeyEvent, lines.Count, ref selectedIndex, indexOnEscape);
+                        if (result.HasValue)
+                            return result.Value;
+                        redraw = true;
                     }
                 }
 
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo k = Console.ReadKey(intercept: true);
-                    int? ergebnis = VerarbeiteConsoleKeyInfo(k, zeilen.Count, ref markiert, indexBeiEscape);
-                    if (ergebnis.HasValue)
-                        return ergebnis.Value;
-                    neuZeichnen = true;
+                    if (isAdminMainMenuAscii && HandleAdminRetroHotkey(k))
+                        continue;
+                    int? result = HandleConsoleKeyInfo(k, lines.Count, ref selectedIndex, indexOnEscape);
+                    if (result.HasValue)
+                        return result.Value;
+                    redraw = true;
                 }
             }
             else
             {
                 ConsoleKeyInfo k = Console.ReadKey(intercept: true);
-                int? ergebnis = VerarbeiteConsoleKeyInfo(k, zeilen.Count, ref markiert, indexBeiEscape);
-                if (ergebnis.HasValue)
-                    return ergebnis.Value;
-                neuZeichnen = true;
+                if (isAdminMainMenuAscii && HandleAdminRetroHotkey(k))
+                    continue;
+                int? result = HandleConsoleKeyInfo(k, lines.Count, ref selectedIndex, indexOnEscape);
+                if (result.HasValue)
+                    return result.Value;
+                redraw = true;
             }
         }
     }
 
-    private void MenueZeichnen(string titel, IReadOnlyList<string> zeilen, int markiert, bool adminHauptmenueAscii)
+    // Zeichnet den kompletten Menü-Bildschirm neu.
+    private void DrawMenu(string title, IReadOnlyList<string> lines, int selectedIndex, bool isAdminMainMenuAscii)
     {
         int w = Console.WindowWidth;
         int h = Console.WindowHeight;
         if (w <= 0) w = 80;
         if (h <= 0) h = 25;
-        _letzteFensterBreite = w;
-        _letzteFensterHoehe = h;
+        _lastWindowWidth = w;
+        _lastWindowHeight = h;
 
         Console.Clear();
         Console.ResetColor();
         Console.CursorVisible = false;
 
+        if (isAdminMainMenuAscii)
+        {
+            DrawAdminRetroLayout(lines, selectedIndex);
+            _adminMenuLastSystemBarMs = Environment.TickCount64;
+            return;
+        }
+
         int ersteZeileNachKopf;
-        const int kopfStartZeile = 1;
-        if (adminHauptmenueAscii)
-        {
-            if (AdminAsciiBannerPasstInBreite(w))
-            {
-                AdminHauptmenueAsciiBannerZeichnen(kopfStartZeile, w);
-                ersteZeileNachKopf = kopfStartZeile + AdminHauptmenueAsciiBanner.Length + 1;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                SchreibeZentriert("═══  ADMIN  ═══", kopfStartZeile, w);
-                Console.ResetColor();
-                ersteZeileNachKopf = 3;
-            }
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        WriteCentered(title, 1, w);
+        Console.ResetColor();
+        ersteZeileNachKopf = 3;
 
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            SchreibeZentriert(titel, ersteZeileNachKopf - 1, w);
-            Console.ResetColor();
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            SchreibeZentriert(titel, 1, w);
-            Console.ResetColor();
-            ersteZeileNachKopf = 3;
-        }
+        int infoLine = CalculateAdminSystemBarFirstLine(h);
+        int lastAllowedMenuLine = infoLine - 2;
+        if (lastAllowedMenuLine < ersteZeileNachKopf)
+            lastAllowedMenuLine = Math.Max(ersteZeileNachKopf, infoLine - 1);
 
-        int infoZeile = AdminSystemleisteErsteZeileBerechnen(h);
-        int letzteErlaubteMenueZeile = infoZeile - 2;
-        if (letzteErlaubteMenueZeile < ersteZeileNachKopf)
-            letzteErlaubteMenueZeile = Math.Max(ersteZeileNachKopf, infoZeile - 1);
-
-        int spannweite = letzteErlaubteMenueZeile - ersteZeileNachKopf + 1;
+        int span = lastAllowedMenuLine - ersteZeileNachKopf + 1;
         int start = ersteZeileNachKopf;
-        if (spannweite >= zeilen.Count)
-            start = ersteZeileNachKopf + (spannweite - zeilen.Count) / 2;
-        if (start + zeilen.Count - 1 > letzteErlaubteMenueZeile)
-            start = Math.Max(ersteZeileNachKopf, letzteErlaubteMenueZeile - zeilen.Count + 1);
+        if (span >= lines.Count)
+            start = ersteZeileNachKopf + (span - lines.Count) / 2;
+        if (start + lines.Count - 1 > lastAllowedMenuLine)
+            start = Math.Max(ersteZeileNachKopf, lastAllowedMenuLine - lines.Count + 1);
 
-        _menueStartZeile = start;
+        _menuStartRow = start;
 
-        for (int i = 0; i < zeilen.Count; i++)
+        for (int i = 0; i < lines.Count; i++)
         {
-            string zeile = zeilen[i];
-            bool aktiv = i == markiert;
+            string zeile = lines[i];
+            bool aktiv = i == selectedIndex;
             int zeileY = start + i;
             if (zeileY < 0 || zeileY >= h)
                 continue;
@@ -160,7 +161,7 @@ public sealed partial class AdminPortal
             Console.SetCursorPosition(0, zeileY);
             Console.Write(new string(' ', w));
 
-            int dw = ZeichenbreiteSchaetzen(zeile);
+            int dw = EstimateDisplayWidth(zeile);
             int pad = Math.Max(0, (w - dw) / 2);
             Console.SetCursorPosition(pad, zeileY);
 
@@ -178,23 +179,101 @@ public sealed partial class AdminPortal
             Console.ResetColor();
         }
 
-        AdminMenueSystemleisteZeichnen(w, h);
-        _adminMenueLetzteSystemleisteMs = Environment.TickCount64;
+        DrawAdminMenuSystemBar(w, h);
+        _adminMenuLastSystemBarMs = Environment.TickCount64;
     }
 
-    private static void SchreibeZentriert(string text, int zeile, int fensterBreite)
+    // Sondertasten fuer das Retro-Hauptmenue: Lautstaerke und Song-Text.
+    private bool HandleAdminRetroHotkey(ConsoleInputWindows.KeyEventRecord key)
     {
-        if (zeile < 0 || zeile >= Console.WindowHeight)
+        ushort vk = key.VirtualKeyCode;
+        char c = (char)key.UnicodeChar;
+
+        if (vk == 0x6B || c == '+')
+        {
+            ChangeAdminRetroVolume(5);
+            return true;
+        }
+
+        if (vk == 0x6D || c == '-')
+        {
+            ChangeAdminRetroVolume(-5);
+            return true;
+        }
+
+        if (vk == 0x4E || c == 'n' || c == 'N')
+        {
+            SetAdminRetroSongText("♪ Naechster Song (Demo)");
+            return true;
+        }
+
+        if (vk == 0x50 || c == 'p' || c == 'P')
+        {
+            SetAdminRetroSongText("♪ Vorheriger Song (Demo)");
+            return true;
+        }
+
+        if (vk == 0x4D || c == 'm' || c == 'M')
+        {
+            SetAdminRetroSongText("♪ Musik-Ordner: waehlen...");
+            return true;
+        }
+
+        return false;
+    }
+
+    // Sondertasten fuer das Retro-Hauptmenue (ConsoleKeyInfo-Variante).
+    private bool HandleAdminRetroHotkey(ConsoleKeyInfo key)
+    {
+        if (key.Key == ConsoleKey.Add || key.KeyChar == '+')
+        {
+            ChangeAdminRetroVolume(5);
+            return true;
+        }
+
+        if (key.Key == ConsoleKey.Subtract || key.KeyChar == '-')
+        {
+            ChangeAdminRetroVolume(-5);
+            return true;
+        }
+
+        if (key.Key == ConsoleKey.N)
+        {
+            SetAdminRetroSongText("♪ Naechster Song (Demo)");
+            return true;
+        }
+
+        if (key.Key == ConsoleKey.P)
+        {
+            SetAdminRetroSongText("♪ Vorheriger Song (Demo)");
+            return true;
+        }
+
+        if (key.Key == ConsoleKey.M)
+        {
+            SetAdminRetroSongText("♪ Musik-Ordner: waehlen...");
+            return true;
+        }
+
+        return false;
+    }
+
+    // Hilfsmethode: schreibt einen Text mittig in eine Zeile.
+    private static void WriteCentered(string text, int row, int windowWidth)
+    {
+        if (row < 0 || row >= Console.WindowHeight)
             return;
-        int dw = ZeichenbreiteSchaetzen(text);
-        int pad = Math.Max(0, (fensterBreite - dw) / 2);
-        Console.SetCursorPosition(0, zeile);
-        Console.Write(new string(' ', fensterBreite));
-        Console.SetCursorPosition(pad, zeile);
+        int dw = EstimateDisplayWidth(text);
+        int pad = Math.Max(0, (windowWidth - dw) / 2);
+        Console.SetCursorPosition(0, row);
+        Console.Write(new string(' ', windowWidth));
+        Console.SetCursorPosition(pad, row);
         Console.Write(text);
     }
 
-    private static int ZeichenbreiteSchaetzen(string s)
+    // Schätzt die Breite eines Textes (inklusive breiter Unicode-Zeichen).
+    // Das ist nur für saubere Ausrichtung in der Konsole.
+    private static int EstimateDisplayWidth(string s)
     {
         int breite = 0;
         foreach (var r in s.EnumerateRunes())
@@ -214,78 +293,85 @@ public sealed partial class AdminPortal
         return breite;
     }
 
-    private int? VerarbeiteMausFuerMenue(ConsoleInputWindows.MouseEventRecord maus, int anzahlZeilen, ref int markiert, ref bool neuZeichnen)
+    // Mausbewegung/Mausklick für Menüauswahl auswerten.
+    private int? HandleMouseForMenu(ConsoleInputWindows.MouseEventRecord mouse, int lineCount, ref int selectedIndex, ref bool redraw)
     {
-        short y = maus.MousePosition.Y;
+        short y = mouse.MousePosition.Y;
         if (y < 0)
             return null;
 
-        int index = y - _menueStartZeile;
-        bool inZeile = index >= 0 && index < anzahlZeilen;
+        int index = y - _menuStartRow;
+        bool inLine = index >= 0 && index < lineCount;
 
-        if ((maus.EventFlags & ConsoleInputWindows.MouseMoved) != 0 && maus.ButtonState == 0)
+        if ((mouse.EventFlags & ConsoleInputWindows.MouseMoved) != 0 && mouse.ButtonState == 0)
         {
-            if (inZeile && index != markiert)
+            if (inLine && index != selectedIndex)
             {
-                markiert = index;
-                neuZeichnen = true;
+                selectedIndex = index;
+                redraw = true;
             }
 
             return null;
         }
 
-        if (maus.EventFlags != 0)
+        if (mouse.EventFlags != 0)
             return null;
 
-        if ((maus.ButtonState & ConsoleInputWindows.FromLeft1stButtonPressed) == 0)
+        if ((mouse.ButtonState & ConsoleInputWindows.FromLeft1stButtonPressed) == 0)
             return null;
 
-        if (!inZeile)
+        if (!inLine)
             return null;
 
         return index;
     }
 
-    private static int? VerarbeiteTasteFuerMenue(ConsoleInputWindows.KeyEventRecord taste, int anzahlZeilen, ref int markiert, int indexBeiEscape)
+    // Tastatur-Ereignisse aus Windows-Inputrecord auswerten.
+    private static int? HandleKeyForMenu(ConsoleInputWindows.KeyEventRecord key, int lineCount, ref int selectedIndex, int indexOnEscape)
     {
-        ushort vk = taste.VirtualKeyCode;
+        ushort vk = key.VirtualKeyCode;
         if (vk == 0x1B)
-            return indexBeiEscape;
+            return indexOnEscape;
         if (vk == 0x0D)
-            return markiert;
+            return selectedIndex;
         if (vk == 0x26)
         {
-            markiert = markiert <= 0 ? anzahlZeilen - 1 : markiert - 1;
+            selectedIndex = selectedIndex <= 0 ? lineCount - 1 : selectedIndex - 1;
             return null;
         }
 
         if (vk == 0x28)
         {
-            markiert = markiert >= anzahlZeilen - 1 ? 0 : markiert + 1;
+            selectedIndex = selectedIndex >= lineCount - 1 ? 0 : selectedIndex + 1;
             return null;
         }
 
         return null;
     }
 
-    private static int? VerarbeiteConsoleKeyInfo(ConsoleKeyInfo k, int anzahlZeilen, ref int markiert, int indexBeiEscape)
+    // Normale Console-Tasten (Pfeile/Enter/Escape) auswerten.
+    private static int? HandleConsoleKeyInfo(ConsoleKeyInfo key, int lineCount, ref int selectedIndex, int indexOnEscape)
     {
-        if (k.Key == ConsoleKey.Escape)
-            return indexBeiEscape;
-        if (k.Key == ConsoleKey.Enter)
-            return markiert;
-        if (k.Key == ConsoleKey.UpArrow)
+        if (key.Key == ConsoleKey.Escape)
+            return indexOnEscape;
+        if (key.Key == ConsoleKey.Enter)
+            return selectedIndex;
+        if (key.Key == ConsoleKey.UpArrow)
         {
-            markiert = markiert <= 0 ? anzahlZeilen - 1 : markiert - 1;
+            selectedIndex = selectedIndex <= 0 ? lineCount - 1 : selectedIndex - 1;
             return null;
         }
 
-        if (k.Key == ConsoleKey.DownArrow)
+        if (key.Key == ConsoleKey.DownArrow)
         {
-            markiert = markiert >= anzahlZeilen - 1 ? 0 : markiert + 1;
+            selectedIndex = selectedIndex >= lineCount - 1 ? 0 : selectedIndex + 1;
             return null;
         }
 
         return null;
     }
 }
+
+// Was macht diese Datei?
+// - Enthält die komplette Menü-Navigation (Zeichnen + Eingabe).
+// - Unterstützt Tastatur und unter Windows zusätzlich Maus-Events.

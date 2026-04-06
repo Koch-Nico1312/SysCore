@@ -5,7 +5,7 @@ namespace LoginPage
     /// <summary>
     /// Login screen after the start screen: asks for a name (ASCII title), echoes the input in color, checks admin names case-insensitively.
     /// </summary>
-    public class loginPage
+    public class LoginPageView
     {
         private static readonly HashSet<string> AdminNames = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -23,7 +23,6 @@ namespace LoginPage
             @"    \_/\_/ \___|_|\___\___/|_| |_| |_|\___|  "
         ];
 
-        /// <summary>Shows the login UI and returns whether the entered name is an admin.</summary>
         public bool ShowLogin()
         {
             if (Console.IsOutputRedirected)
@@ -50,13 +49,11 @@ namespace LoginPage
         private static bool RunLoginVisual()
         {
             Console.CursorVisible = true;
-
             Console.Clear();
             Console.ResetColor();
 
             int w = Console.WindowWidth;
             int h = Console.WindowHeight;
-
             if (w <= 0) w = 80;
             if (h <= 0) h = 25;
 
@@ -70,7 +67,6 @@ namespace LoginPage
             Console.SetCursorPosition(0, promptRow);
             Console.Write(new string(' ', w));
             Console.SetCursorPosition(pad, promptRow);
-
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Wie heißt du? ");
             Console.ResetColor();
@@ -82,7 +78,6 @@ namespace LoginPage
             Console.SetCursorPosition(0, echoRow);
             Console.Write(new string(' ', w));
             Console.SetCursorPosition(pad, echoRow);
-
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write("Eingabe: ");
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -108,7 +103,6 @@ namespace LoginPage
 
             Console.ResetColor();
             Console.SetCursorPosition(0, Math.Min(h - 1, resultRow + 2));
-
             return isAdmin;
         }
 
@@ -168,7 +162,6 @@ namespace LoginPage
                     Console.Write(line);
                 }
             }
-
             Console.ResetColor();
         }
 
@@ -177,22 +170,18 @@ namespace LoginPage
             int inner = Math.Max(4, windowWidth - 4);
             string top = "╔" + new string('═', inner) + "╗";
             string bottom = "╚" + new string('═', inner) + "╝";
-
             int titleW = GetDisplayWidth(title);
             int pad = Math.Max(0, inner - titleW);
             int left = pad / 2;
             int right = pad - left;
             string mid = "║" + new string(' ', left) + title + new string(' ', right) + "║";
-
             return [top, mid, bottom];
         }
 
         private sealed class ConsoleEncodingRestore : IDisposable
         {
             private readonly Encoding _encoding;
-
             public ConsoleEncodingRestore(Encoding encoding) => _encoding = encoding;
-
             public void Dispose() => Console.OutputEncoding = _encoding;
         }
     }
