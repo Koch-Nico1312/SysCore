@@ -200,6 +200,10 @@ public sealed partial class AdminPortal
                 case 12: RunAsciiArtGenerator(); break;
                 case 13: RunColorPaletteGenerator(); break;
                 case 14: RunMusicPlayer(); break;
+                case 15: RunWorldTimeTool(); break;
+                case 16: RunDiceSimulatorTool(); break;
+                case 17: RunQuizTool(); break;
+                case 18: RunExpenseTrackerTool(); break;
             }
 
             return;
@@ -225,6 +229,10 @@ public sealed partial class AdminPortal
             case 12: RunAsciiArtGenerator(); break;
             case 13: RunColorPaletteGenerator(); break;
             case 14: RunMusicPlayer(); break;
+            case 15: RunWorldTimeTool(); break;
+            case 16: RunDiceSimulatorTool(); break;
+            case 17: RunQuizTool(); break;
+            case 18: RunExpenseTrackerTool(); break;
         }
     }
 
@@ -265,7 +273,11 @@ public sealed partial class AdminPortal
         "System Monitor (CPU, RAM)",
         "ASCII Art Generator",
         "Farbpaletten Generator",
-        "Musik Player (MP3)"
+        "Musik Player (MP3)",
+        "Weltzeit-Anzeige",
+        "Wuerfelsimulator",
+        "Quiz",
+        "Ausgaben-Tracker"
     ];
 
     // Oeffnet eine Webseite im Standardbrowser.

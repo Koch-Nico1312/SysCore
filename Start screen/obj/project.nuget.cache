@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "RJLtyhybIcU=",
+  "dgSpecHash": "nsnqXW85DVs=",
   "success": true,
-  "projectFilePath": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\Start screen\\Start screen.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Nico\\Desktop\\SySCore\\Start screen\\Start screen.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.11\\microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
+    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.11\\microsoft.windowsdesktop.app.ref.9.0.11.nupkg.sha512",
+    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.11\\microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512"
+  ],
   "logs": []
 }

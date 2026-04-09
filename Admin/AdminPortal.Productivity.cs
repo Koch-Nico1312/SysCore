@@ -8,9 +8,9 @@ public sealed partial class AdminPortal
     // Kleine Datenklasse für eine Aufgabe.
     private sealed class TaskEntry
     {
-        internal string Titel = "";
+        internal string Title = "";
         internal DateTime Deadline;
-        internal bool Erledigt;
+        internal bool IsDone;
     }
 
     // Hauptmenü vom Task-Manager.
@@ -52,8 +52,12 @@ public sealed partial class AdminPortal
         for (int i = 0; i < liste.Count; i++)
         {
             TaskEntry a = liste[i];
-            string status = a.Erledigt ? "[x]" : "[ ]";
-            Console.WriteLine($"{i + 1}. {status} {a.Titel} — {a.Deadline:yyyy-MM-dd}");
+            string status = "[ ]";
+            if (a.IsDone)
+            {
+                status = "[x]";
+            }
+            Console.WriteLine($"{i + 1}. {status} {a.Title} — {a.Deadline:yyyy-MM-dd}");
         }
     }
 
@@ -62,8 +66,8 @@ public sealed partial class AdminPortal
     {
         Console.Write("Titel: ");
         string? t = Console.ReadLine();
-        string titel = t?.Trim() ?? "";
-        if (titel.Length == 0)
+        string title = t?.Trim() ?? "";
+        if (title.Length == 0)
             return;
         Console.Write("Deadline (yyyy-MM-dd): ");
         string? d = Console.ReadLine();
@@ -75,7 +79,7 @@ public sealed partial class AdminPortal
         }
 
         List<TaskEntry> liste = LoadTasksFromFile();
-        liste.Add(new TaskEntry { Titel = titel, Deadline = deadline, Erledigt = false });
+        liste.Add(new TaskEntry { Title = title, Deadline = deadline, IsDone = false });
         SaveTasksToFile(liste);
         Console.WriteLine("Gespeichert.");
     }
@@ -89,7 +93,7 @@ public sealed partial class AdminPortal
         string? n = Console.ReadLine();
         if (!int.TryParse(n, out int idx) || idx < 1 || idx > liste.Count)
             return;
-        liste[idx - 1].Erledigt = true;
+        liste[idx - 1].IsDone = true;
         SaveTasksToFile(liste);
     }
 
@@ -103,10 +107,10 @@ public sealed partial class AdminPortal
 
         foreach (string roh in File.ReadAllLines(pfad, Encoding.UTF8))
         {
-            string zeile = roh.Trim();
-            if (zeile.Length == 0)
+        string line = roh.Trim();
+        if (line.Length == 0)
                 continue;
-            TaskEntry? a = ParseTaskFromLine(zeile);
+        TaskEntry? a = ParseTaskFromLine(line);
             if (a != null)
                 liste.Add(a);
         }
@@ -115,16 +119,16 @@ public sealed partial class AdminPortal
     }
 
     // Wandelt eine Datei-Zeile in ein Aufgaben-Objekt um.
-    private static TaskEntry? ParseTaskFromLine(string zeile)
+    private static TaskEntry? ParseTaskFromLine(string line)
     {
-        string[] teile = zeile.Split('|');
-        if (teile.Length < 3)
+        string[] parts = line.Split('|');
+        if (parts.Length < 3)
             return null;
-        string titel = teile[0];
-        if (!DateTime.TryParseExact(teile[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime deadline))
+        string title = parts[0];
+        if (!DateTime.TryParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime deadline))
             return null;
-        bool erl = teile[2] == "1" || teile[2].Equals("true", StringComparison.OrdinalIgnoreCase);
-        return new TaskEntry { Titel = titel, Deadline = deadline, Erledigt = erl };
+        bool isDone = parts[2] == "1" || parts[2].Equals("true", StringComparison.OrdinalIgnoreCase);
+        return new TaskEntry { Title = title, Deadline = deadline, IsDone = isDone };
     }
 
     // Schreibt die Aufgabenliste wieder in die Datei.
@@ -133,8 +137,12 @@ public sealed partial class AdminPortal
         StringBuilder sb = new();
         foreach (TaskEntry a in liste)
         {
-            string f = a.Erledigt ? "1" : "0";
-            sb.Append(a.Titel.Replace('|', ' ')).Append('|').Append(a.Deadline.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)).Append('|').AppendLine(f);
+            string doneFlag = "0";
+            if (a.IsDone)
+            {
+                doneFlag = "1";
+            }
+            sb.Append(a.Title.Replace('|', ' ')).Append('|').Append(a.Deadline.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)).Append('|').AppendLine(doneFlag);
         }
 
         File.WriteAllText(BuildTasksFilePath(), sb.ToString(), Encoding.UTF8);
@@ -362,8 +370,16 @@ public sealed partial class AdminPortal
             string enc = zeile[(pipe + 1)..];
             string klar = RestoreTextWithXorKey(enc, schluessel);
             string[] teile = klar.Split('\n');
-            string user = teile.Length > 0 ? teile[0] : "";
-            string pass = teile.Length > 1 ? teile[1] : "";
+            string user = "";
+            string pass = "";
+            if (teile.Length > 0)
+            {
+                user = teile[0];
+            }
+            if (teile.Length > 1)
+            {
+                pass = teile[1];
+            }
             Console.WriteLine("Benutzer: " + user);
             Console.WriteLine("Passwort: " + pass);
             return;

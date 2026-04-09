@@ -11,3 +11,15 @@ c:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Debug\net9.0\Admin.dll
 c:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Debug\net9.0\refint\Admin.dll
 c:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Debug\net9.0\Admin.pdb
 c:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Debug\net9.0\ref\Admin.dll
+C:\Users\Nico\Desktop\SySCore\Admin\bin\Debug\net9.0\Admin.deps.json
+C:\Users\Nico\Desktop\SySCore\Admin\bin\Debug\net9.0\Admin.dll
+C:\Users\Nico\Desktop\SySCore\Admin\bin\Debug\net9.0\Admin.pdb
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.csproj.AssemblyReference.cache
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.AssemblyInfoInputs.cache
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.AssemblyInfo.cs
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.dll
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\refint\Admin.dll
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.pdb
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\ref\Admin.dll

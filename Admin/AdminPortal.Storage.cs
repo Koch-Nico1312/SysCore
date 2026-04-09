@@ -3,7 +3,7 @@ namespace AdminApp;
 public sealed partial class AdminPortal
 {
     // Ermittelt den App-Datenordner und legt ihn bei Bedarf an.
-    private static string SysCoreDatenVerzeichnisErmitteln()
+    private static string GetSysCoreDataDirectory()
     {
         string basis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string ordner = Path.Combine(basis, "SysCore");
@@ -14,13 +14,13 @@ public sealed partial class AdminPortal
     // Pfad für die Aufgaben-Datei.
     private static string BuildTasksFilePath()
     {
-        return Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "admin_aufgaben.txt");
+        return Path.Combine(GetSysCoreDataDirectory(), "admin_aufgaben.txt");
     }
 
     // Pfad für den Notizen-Ordner.
     private static string BuildNotesFolderPath()
     {
-        string n = Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "notizen");
+        string n = Path.Combine(GetSysCoreDataDirectory(), "notizen");
         Directory.CreateDirectory(n);
         return n;
     }
@@ -28,7 +28,7 @@ public sealed partial class AdminPortal
     // Pfad für den Passwort-Tresor.
     private static string BuildPasswordVaultPath()
     {
-        return Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "admin_passwort_tresor.txt");
+        return Path.Combine(GetSysCoreDataDirectory(), "admin_passwort_tresor.txt");
     }
 
     // Erzeugt aus dem Master-Passwort einen festen Schlüssel (SHA256).

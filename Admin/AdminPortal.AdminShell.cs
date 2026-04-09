@@ -72,10 +72,29 @@ public sealed partial class AdminPortal
         return Math.Max(1, breite);
     }
 
+    // Startzeile fuer den rechten Systeminfo-Block im Retro-Layout (vertikal zentriert).
+    private static int CalculateAdminRetroInfoStartRow(int windowHeight, int blockHeight)
+    {
+        if (windowHeight <= 0)
+            return 1;
+        int usableHeight = Math.Max(1, windowHeight - 2); // Hilfezeile unten frei halten.
+        int top = (usableHeight - blockHeight) / 2;
+        if (top < 1)
+            top = 1;
+        int maxTop = Math.Max(1, usableHeight - blockHeight);
+        if (top > maxTop)
+            top = maxTop;
+        return top;
+    }
+
     // Zeichnet das ASCII-Banner im Hauptmenü.
     private void DrawAdminMainMenuAsciiBanner(int startZeile, int fensterBreite)
     {
-        ConsoleColor bannerAkzent = _themeAccent == _themeBackground ? _themePrimary : _themeAccent;
+        ConsoleColor bannerAkzent = _themeAccent;
+        if (_themeAccent == _themeBackground)
+        {
+            bannerAkzent = _themePrimary;
+        }
         int h = Console.WindowHeight;
         if (h <= 0) h = 25;
         for (int i = 0; i < AdminHauptmenueAsciiBanner.Length; i++)
@@ -89,7 +108,14 @@ public sealed partial class AdminPortal
             Console.SetCursorPosition(0, row);
             Console.Write(new string(' ', fensterBreite));
             Console.SetCursorPosition(pad, row);
-            Console.ForegroundColor = i % 2 == 0 ? bannerAkzent : _themePrimary;
+            if (i % 2 == 0)
+            {
+                Console.ForegroundColor = bannerAkzent;
+            }
+            else
+            {
+                Console.ForegroundColor = _themePrimary;
+            }
             Console.BackgroundColor = _themeBackground;
             Console.Write(zeile);
         }
@@ -192,7 +218,11 @@ public sealed partial class AdminPortal
     {
         string name = Environment.MachineName;
         string os = Environment.OSVersion.Platform.ToString();
-        string bit = Environment.Is64BitOperatingSystem ? "64-Bit" : "32-Bit";
+        string bit = "32-Bit";
+        if (Environment.Is64BitOperatingSystem)
+        {
+            bit = "64-Bit";
+        }
         return string.Format(CultureInfo.CurrentCulture, "Rechner: {0}   OS: {1}   {2}", name, os, bit);
     }
 
@@ -305,7 +335,8 @@ public sealed partial class AdminPortal
         Console.Write(hilfe.PadRight(breite - 2));
         Console.ForegroundColor = _themePrimary;
 
-        int infoY = 2;
+        const int infoBlockHeight = 10;
+        int infoY = CalculateAdminRetroInfoStartRow(hoehe, infoBlockHeight);
         WriteAdminRetroRightAligned(infoY + 0, BuildAdminRetroStorageText());
         WriteAdminRetroRightAligned(infoY + 1, "Laufwerk: C:\\");
         WriteAdminRetroRightAligned(infoY + 2, "Benutzer: " + Environment.UserName);
@@ -408,7 +439,14 @@ public sealed partial class AdminPortal
         string balken = "";
         for (int i = 0; i < gesamt; i++)
         {
-            balken += i < voll ? "█" : "░";
+            if (i < voll)
+            {
+                balken += "█";
+            }
+            else
+            {
+                balken += "░";
+            }
         }
 
         return "Volume: [" + balken + "] " + _adminRetroLautstaerke + "%";

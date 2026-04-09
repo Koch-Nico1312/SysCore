@@ -59,7 +59,12 @@ public sealed partial class AdminPortal
     private static void WriteSystemMonitorLine(float cpuPercent, float ramFreeMb)
     {
         string zeile = string.Format(CultureInfo.InvariantCulture, "CPU (gesamt): {0:0.#} %   RAM frei: {1:0} MB", cpuPercent, ramFreeMb);
-        Console.Write("\r" + zeile.PadRight(Console.WindowWidth > 0 ? Console.WindowWidth - 1 : 60));
+        int width = 60;
+        if (Console.WindowWidth > 0)
+        {
+            width = Console.WindowWidth - 1;
+        }
+        Console.Write("\r" + zeile.PadRight(width));
     }
 
     // ASCII-Art Generator für einfachen Text.
@@ -173,8 +178,9 @@ public sealed partial class AdminPortal
         Console.WriteLine("3) Forest Dusk        BG #000000  FG #008000  ACC #008000");
         Console.WriteLine("4) Arctic Frost       BG #008080  FG #FFFFFF  ACC #0000FF");
         Console.WriteLine("5) Lava Flow          BG #800000  FG #FFFF00  ACC #FFFF00");
+        Console.WriteLine("6) Nur Akzentfarbe waehlen");
         Console.WriteLine();
-        Console.Write("Choose (1-5): ");
+        Console.Write("Choose (1-6): ");
         string? input = Console.ReadLine();
         string choice = input?.Trim() ?? "";
 
@@ -220,9 +226,38 @@ public sealed partial class AdminPortal
                     highlightForeground: ConsoleColor.White,
                     highlightBackground: ConsoleColor.Red);
                 break;
+            case "6":
+                RunAdminAccentColorPicker();
+                break;
             default:
                 return;
         }
+    }
+
+    private void RunAdminAccentColorPicker()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Akzentfarbe:");
+        Console.WriteLine("1) Cyan  2) Green  3) Magenta  4) Yellow  5) Blue  6) White");
+        Console.Write("> ");
+        string? w = Console.ReadLine();
+        ConsoleColor accent = w?.Trim() switch
+        {
+            "1" => ConsoleColor.Cyan,
+            "2" => ConsoleColor.Green,
+            "3" => ConsoleColor.Magenta,
+            "4" => ConsoleColor.Yellow,
+            "5" => ConsoleColor.Blue,
+            "6" => ConsoleColor.White,
+            _ => _themeAccent
+        };
+
+        SetAdminTheme(
+            primary: _themePrimary,
+            accent: accent,
+            background: _themeBackground,
+            highlightForeground: _themeHighlightForeground,
+            highlightBackground: _themeHighlightBackground);
     }
 
     // Schreibt einen HEX-Farbwert eingefärbt in die Konsole.
@@ -316,11 +351,29 @@ public sealed partial class AdminPortal
             return ConsoleColor.White;
 
         if (r > g && r > b)
-            return r > 200 ? ConsoleColor.Red : ConsoleColor.DarkRed;
+        {
+            if (r > 200)
+            {
+                return ConsoleColor.Red;
+            }
+            return ConsoleColor.DarkRed;
+        }
         if (g > r && g > b)
-            return g > 200 ? ConsoleColor.Green : ConsoleColor.DarkGreen;
+        {
+            if (g > 200)
+            {
+                return ConsoleColor.Green;
+            }
+            return ConsoleColor.DarkGreen;
+        }
         if (b > r && b > g)
-            return b > 200 ? ConsoleColor.Blue : ConsoleColor.DarkBlue;
+        {
+            if (b > 200)
+            {
+                return ConsoleColor.Blue;
+            }
+            return ConsoleColor.DarkBlue;
+        }
 
         return ConsoleColor.Gray;
     }

@@ -10,3 +10,14 @@ C:\Users\kochn_lrehka5\Desktop\SysCore\casualUser\obj\Debug\net9.0\casualUser.dl
 C:\Users\kochn_lrehka5\Desktop\SysCore\casualUser\obj\Debug\net9.0\refint\casualUser.dll
 C:\Users\kochn_lrehka5\Desktop\SysCore\casualUser\obj\Debug\net9.0\casualUser.pdb
 C:\Users\kochn_lrehka5\Desktop\SysCore\casualUser\obj\Debug\net9.0\ref\casualUser.dll
+C:\Users\Nico\Desktop\SySCore\casualUser\bin\Debug\net9.0\casualUser.deps.json
+C:\Users\Nico\Desktop\SySCore\casualUser\bin\Debug\net9.0\casualUser.dll
+C:\Users\Nico\Desktop\SySCore\casualUser\bin\Debug\net9.0\casualUser.pdb
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.AssemblyInfoInputs.cache
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.AssemblyInfo.cs
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.dll
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\refint\casualUser.dll
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.pdb
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\ref\casualUser.dll
