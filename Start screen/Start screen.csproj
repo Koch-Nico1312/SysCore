@@ -6,6 +6,7 @@
     <RootNamespace>Start_screen</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
 </Project>

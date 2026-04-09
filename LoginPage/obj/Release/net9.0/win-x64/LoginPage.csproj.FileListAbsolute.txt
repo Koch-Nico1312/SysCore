@@ -1,0 +1,12 @@
+C:\Users\Nico\Desktop\SySCore\LoginPage\bin\Release\net9.0\win-x64\LoginPage.deps.json
+C:\Users\Nico\Desktop\SySCore\LoginPage\bin\Release\net9.0\win-x64\LoginPage.dll
+C:\Users\Nico\Desktop\SySCore\LoginPage\bin\Release\net9.0\win-x64\LoginPage.pdb
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.AssemblyInfoInputs.cache
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.AssemblyInfo.cs
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.sourcelink.json
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.dll
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\refint\LoginPage.dll
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\LoginPage.pdb
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Release\net9.0\win-x64\ref\LoginPage.dll

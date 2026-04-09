@@ -21,3 +21,4 @@ C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.dll
 C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\refint\casualUser.dll
 C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.pdb
 C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\ref\casualUser.dll
+C:\Users\Nico\Desktop\SySCore\casualUser\obj\Debug\net9.0\casualUser.sourcelink.json
