@@ -21,3 +21,4 @@ C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Debug\net9.0\LoginPage.dll
 C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Debug\net9.0\refint\LoginPage.dll
 C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Debug\net9.0\LoginPage.pdb
 C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Debug\net9.0\ref\LoginPage.dll
+C:\Users\Nico\Desktop\SySCore\LoginPage\obj\Debug\net9.0\LoginPage.sourcelink.json

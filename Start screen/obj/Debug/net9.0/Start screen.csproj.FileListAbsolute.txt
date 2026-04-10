@@ -21,3 +21,4 @@ C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.dll
 C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\refint\Start screen.dll
 C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.pdb
 C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\ref\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.sourcelink.json

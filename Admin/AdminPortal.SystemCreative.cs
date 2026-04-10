@@ -173,11 +173,11 @@ public sealed partial class AdminPortal
 
         Console.WriteLine("=== Color Palette ===");
         Console.WriteLine();
-        Console.WriteLine("1) Midnight Noir      BG #000000  FG #808000  ACC #808080");
-        Console.WriteLine("2) Neon Tokyo         BG #800080  FG #FFFFFF  ACC #00FFFF");
-        Console.WriteLine("3) Forest Dusk        BG #000000  FG #008000  ACC #008000");
-        Console.WriteLine("4) Arctic Frost       BG #008080  FG #FFFFFF  ACC #0000FF");
-        Console.WriteLine("5) Lava Flow          BG #800000  FG #FFFF00  ACC #FFFF00");
+        Console.WriteLine("1) Schriftfarbe: DarkYellow");
+        Console.WriteLine("2) Schriftfarbe: White");
+        Console.WriteLine("3) Schriftfarbe: Green");
+        Console.WriteLine("4) Schriftfarbe: White");
+        Console.WriteLine("5) Schriftfarbe: Yellow");
         Console.WriteLine("6) Nur Akzentfarbe waehlen");
         Console.WriteLine();
         Console.Write("Choose (1-6): ");
@@ -189,42 +189,42 @@ public sealed partial class AdminPortal
             case "1":
                 SetAdminTheme(
                     primary: ConsoleColor.DarkYellow,
-                    accent: ConsoleColor.DarkGray,
-                    background: ConsoleColor.Black,
-                    highlightForeground: ConsoleColor.White,
-                    highlightBackground: ConsoleColor.DarkYellow);
+                    accent: _themeAccent,
+                    background: _themeBackground,
+                    highlightForeground: _themeHighlightForeground,
+                    highlightBackground: _themeHighlightBackground);
                 break;
             case "2":
                 SetAdminTheme(
                     primary: ConsoleColor.White,
-                    accent: ConsoleColor.Cyan,
-                    background: ConsoleColor.DarkMagenta,
-                    highlightForeground: ConsoleColor.White,
-                    highlightBackground: ConsoleColor.DarkBlue);
+                    accent: _themeAccent,
+                    background: _themeBackground,
+                    highlightForeground: _themeHighlightForeground,
+                    highlightBackground: _themeHighlightBackground);
                 break;
             case "3":
                 SetAdminTheme(
                     primary: ConsoleColor.Green,
-                    accent: ConsoleColor.DarkGreen,
-                    background: ConsoleColor.Black,
-                    highlightForeground: ConsoleColor.White,
-                    highlightBackground: ConsoleColor.DarkGreen);
+                    accent: _themeAccent,
+                    background: _themeBackground,
+                    highlightForeground: _themeHighlightForeground,
+                    highlightBackground: _themeHighlightBackground);
                 break;
             case "4":
                 SetAdminTheme(
                     primary: ConsoleColor.White,
-                    accent: ConsoleColor.Blue,
-                    background: ConsoleColor.DarkCyan,
-                    highlightForeground: ConsoleColor.White,
-                    highlightBackground: ConsoleColor.Blue);
+                    accent: _themeAccent,
+                    background: _themeBackground,
+                    highlightForeground: _themeHighlightForeground,
+                    highlightBackground: _themeHighlightBackground);
                 break;
             case "5":
                 SetAdminTheme(
                     primary: ConsoleColor.Yellow,
-                    accent: ConsoleColor.Yellow,
-                    background: ConsoleColor.DarkRed,
-                    highlightForeground: ConsoleColor.White,
-                    highlightBackground: ConsoleColor.Red);
+                    accent: _themeAccent,
+                    background: _themeBackground,
+                    highlightForeground: _themeHighlightForeground,
+                    highlightBackground: _themeHighlightBackground);
                 break;
             case "6":
                 RunAdminAccentColorPicker();

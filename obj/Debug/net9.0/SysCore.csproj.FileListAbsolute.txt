@@ -75,3 +75,4 @@ C:\Users\Nico\Desktop\SySCore\obj\Debug\net9.0\refint\SysCore.dll
 C:\Users\Nico\Desktop\SySCore\obj\Debug\net9.0\SysCore.pdb
 C:\Users\Nico\Desktop\SySCore\obj\Debug\net9.0\SysCore.genruntimeconfig.cache
 C:\Users\Nico\Desktop\SySCore\obj\Debug\net9.0\ref\SysCore.dll
+C:\Users\Nico\Desktop\SySCore\obj\Debug\net9.0\SysCore.sourcelink.json

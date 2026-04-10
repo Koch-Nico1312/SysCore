@@ -23,3 +23,4 @@ C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.dll
 C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\refint\Admin.dll
 C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.pdb
 C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\ref\Admin.dll
+C:\Users\Nico\Desktop\SySCore\Admin\obj\Debug\net9.0\Admin.sourcelink.json
