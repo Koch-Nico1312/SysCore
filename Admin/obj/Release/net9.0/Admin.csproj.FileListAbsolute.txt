@@ -11,3 +11,16 @@ C:\Users\Nico\Desktop\SySCore\Admin\obj\Release\net9.0\Admin.dll
 C:\Users\Nico\Desktop\SySCore\Admin\obj\Release\net9.0\refint\Admin.dll
 C:\Users\Nico\Desktop\SySCore\Admin\obj\Release\net9.0\Admin.pdb
 C:\Users\Nico\Desktop\SySCore\Admin\obj\Release\net9.0\ref\Admin.dll
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\bin\Release\net9.0\Admin.deps.json
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\bin\Release\net9.0\Admin.dll
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\bin\Release\net9.0\Admin.pdb
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.csproj.AssemblyReference.cache
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.AssemblyInfoInputs.cache
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.AssemblyInfo.cs
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.csproj.CoreCompileInputs.cache
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.sourcelink.json
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.dll
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\refint\Admin.dll
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\Admin.pdb
+C:\Users\kochn_lrehka5\Desktop\SysCore\Admin\obj\Release\net9.0\ref\Admin.dll

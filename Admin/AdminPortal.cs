@@ -4,13 +4,6 @@ using System.Text;
 namespace AdminApp;
 
 /// <summary>Admin-Bereich nach erfolgreichem Login: Menüs und alle Admin-Programme.</summary>
-// WICHTIG FÜR DICH:
-// Diese Klasse ist "partial", weil ihr Code auf mehrere Dateien verteilt ist.
-// Das ist nur eine Aufteilung für bessere Übersicht. Logisch ist es am Ende EINE Klasse.
-// Du kannst das später lernen; für jetzt reicht: Alle "AdminPortal.*.cs" gehören zusammen.
-//
-// "sealed" bedeutet: Von dieser Klasse kann keine Unterklasse abgeleitet werden.
-// Das ist hier nur eine Design-Entscheidung und ändert nichts am Grundablauf.
 public sealed partial class AdminPortal
 {
     // Hier ist einfach das Admin-Hauptding drin.
@@ -58,7 +51,7 @@ public sealed partial class AdminPortal
             // 2 = Schule (Platzhalter)
             if (mainSelection == 2)
             {
-                ShowShortFeedback("Schule: Hier kannst du spaeter deine Schul-Tools einbauen.");
+                ShowShortFeedback("Schule: Hier kannst du später deine Schul-Tools einbauen.");
                 continue;
             }
 
@@ -113,7 +106,7 @@ public sealed partial class AdminPortal
         bool shouldContinue = true;
         while (shouldContinue)
         {
-            foreach (string bannerLine in AdminHauptmenueAsciiBanner)
+            foreach (string bannerLine in AdminHauptmenüAsciiBanner)
                 Console.Out.WriteLine(bannerLine);
             Console.Out.WriteLine("1) Programme starten");
             Console.Out.WriteLine("2) Beenden");

@@ -7,7 +7,6 @@ namespace AdminApp;
 public sealed partial class AdminPortal
 {
     // Hier steckt die ganze Admin-Optik drin.
-    // PerformanceCounter ist bisschen advanced, aber funktioniert gut fuer CPU/RAM.
     private PerformanceCounter? _adminMenuCpu;
     private PerformanceCounter? _adminMenuRam;
     private long _adminMenuLastSystemBarMs;
@@ -29,7 +28,7 @@ public sealed partial class AdminPortal
     private ConsoleColor _themeHighlightForeground = ConsoleColor.White;
     private ConsoleColor _themeHighlightBackground = ConsoleColor.DarkBlue;
 
-    private static readonly string[] AdminHauptmenueAsciiBanner =
+    private static readonly string[] AdminHauptmenüAsciiBanner =
     [
         @"  /$$$$$$        /$$               /$$          ",
         @" /$$__  $$      | $$              |__/          ",
@@ -42,13 +41,13 @@ public sealed partial class AdminPortal
     ];
 
     // Berechnet die obere Zeile der Systemleiste (unteres Viertel der Konsole).
-    private static int CalculateAdminSystemBarFirstLine(int fensterHeight)
+    private static int CalculateAdminSystemBarFirstLine(int windowHeight)
     {
-        if (fensterHeight <= 0)
+        if (windowHeight <= 0)
             return 0;
         // Die Systemleiste nutzt immer die letzten 2 Zeilen,
         // damit im Menuebereich maximal viel Platz bleibt.
-        return Math.Max(0, fensterHeight - 2);
+        return Math.Max(0, windowHeight - 2);
     }
 
     // Startspalte für Quadrant 4: rechte Hälfte der Konsole.
@@ -77,9 +76,9 @@ public sealed partial class AdminPortal
         ConsoleColor bannerAkzent = _themeAccent == _themeBackground ? _themePrimary : _themeAccent;
         int h = Console.WindowHeight;
         if (h <= 0) h = 25;
-        for (int i = 0; i < AdminHauptmenueAsciiBanner.Length; i++)
+        for (int i = 0; i < AdminHauptmenüAsciiBanner.Length; i++)
         {
-            string zeile = AdminHauptmenueAsciiBanner[i];
+            string zeile = AdminHauptmenüAsciiBanner[i];
             int row = startZeile + i;
             if (row < 0 || row >= h)
                 continue;
@@ -223,7 +222,7 @@ public sealed partial class AdminPortal
     private static bool AdminAsciiBannerPasstInBreite(int fensterBreite)
     {
         int max = 0;
-        foreach (string z in AdminHauptmenueAsciiBanner)
+        foreach (string z in AdminHauptmenüAsciiBanner)
         {
             int w = EstimateDisplayWidth(z);
             if (w > max) max = w;
@@ -271,7 +270,7 @@ public sealed partial class AdminPortal
         // Menue startet standardmaessig unter dem Banner.
         // Bei kleinen Fenstern wird es so weit wie noetig nach oben geschoben,
         // bleibt aber oberhalb der Hilfezeile.
-        int bevorzugterMenueStart = bannerStartZeile + AdminHauptmenueAsciiBanner.Length + bannerAbstandZumMenue;
+        int bevorzugterMenueStart = bannerStartZeile + AdminHauptmenüAsciiBanner.Length + bannerAbstandZumMenue;
         int spaetesterMenueStart = Math.Max(1, hoehe - 2 - zeilen.Count);
         _menuStartRow = Math.Min(bevorzugterMenueStart, spaetesterMenueStart);
         for (int i = 0; i < zeilen.Count; i++)

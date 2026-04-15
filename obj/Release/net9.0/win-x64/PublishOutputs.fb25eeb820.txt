@@ -1,0 +1,2 @@
+C:\Users\kochn_lrehka5\Desktop\SysCore\bin\Release\net9.0\win-x64\publish\SysCore.pdb
+C:\Users\kochn_lrehka5\Desktop\SysCore\bin\Release\net9.0\win-x64\publish\SysCore.exe

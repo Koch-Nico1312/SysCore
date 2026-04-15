@@ -3,12 +3,19 @@ namespace LoginPage
     public class LoginPageView
     {
         private const int maxTry = 3;
+        private string loginHeadLine = @"      :::        ::::::::   :::::::: ::::::::::: ::::    ::: 
+     :+:       :+:    :+: :+:    :+:    :+:     :+:+:   :+:  
+    +:+       +:+    +:+ +:+           +:+     :+:+:+  +:+   
+   +#+       +#+    +:+ :#:           +#+     +#+ +:+ +#+    
+  +#+       +#+    +#+ +#+   +#+#    +#+     +#+  +#+#+#     
+ #+#       #+#    #+# #+#    #+#    #+#     #+#   #+#+#      
+########## ########   ######## ########### ###    ####       ";
 
         private static readonly string[] adminNames = new string[]
         {
-            "Nico",
-            "Palitsch",
-            "PALI"
+            "nico",
+            "palitsch",
+            "pali"
         };
 
         // Zeigt den Login und liefert true bei Admin-Namen.
@@ -22,19 +29,19 @@ namespace LoginPage
             int infoTop = top + 2;
             int promptTop = top + 4;
 
-            WriteCenteredAt("═══ Login ═══", top, ConsoleColor.Cyan, width);
+            WriteCenteredAt(loginHeadLine, top - 20 , ConsoleColor.Cyan, width);
             WriteCenteredAt("Bitte Namen eingeben (oder 'exit' zum Beenden).", infoTop, ConsoleColor.Gray, width);
 
             for (int attempt = 1; attempt <= maxTry; attempt++)
             {
-                string prompt = $"Wie heisst du?  [{attempt}/{maxTry}] ";
+                string prompt = $"Wie hei?t du?  [{attempt}/{maxTry}] ";
                 int promptLeft = Math.Max(0, (width - prompt.Length) / 2);
                 Console.SetCursorPosition(promptLeft, promptTop);
                 Console.Write(new string(' ', Math.Max(0, width - promptLeft)));
                 Console.SetCursorPosition(promptLeft, promptTop);
                 Console.Write(prompt);
 
-                string name = NormalizeName(Console.ReadLine());
+                string name = NormalizeName(Console.ReadLine()!.ToLower());
                 if (name.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 {
                     WriteCenteredAt("Login abgebrochen. Starte als normaler Benutzer.", promptTop + 2, ConsoleColor.Yellow, width);
@@ -92,7 +99,7 @@ namespace LoginPage
             Console.ResetColor();
         }
 
-        // Prueft, ob ein Name in der Admin-Liste steht.
+        // Prüft, ob ein Name in der Admin-Liste steht.
         private static bool IsAdminName(string name)
         {
             if (name.Length == 0)
@@ -111,6 +118,7 @@ namespace LoginPage
             return false;
         }
 
+        //Schauen ob die Namenseingabe leer ist und das Programm nicht abstürzt
         private static string NormalizeName(string? input)
         {
             return (input ?? string.Empty).Trim();

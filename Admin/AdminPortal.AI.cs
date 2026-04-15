@@ -6,7 +6,7 @@ public sealed partial class AdminPortal
 {
     private const string FreeGeminiModel = "gemini-2.0-flash";
 
-    // Einfaches Config-Objekt fuer API-Key + Modell.
+    // Einfaches Config-Objekt für API-Key + Modell.
     private sealed record GeminiConfig(string gemini_api_key, string gemini_model);
 
     private void RunGeminiChatModule()
