@@ -5,10 +5,10 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // record passt hier, weil Aufgaben eher Daten sind (value equality usw.)
+    // Einfaches Aufgaben-Datenobjekt.
     private sealed record TaskEntry(string Titel, DateTime Deadline, bool Erledigt);
 
-    // Hauptmenü vom Task-Manager.
+    // Task Menue.
     private void RunTaskManager()
     {
         Console.WriteLine("=== Task Manager ===");

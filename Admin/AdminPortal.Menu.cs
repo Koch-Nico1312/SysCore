@@ -2,11 +2,12 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
+    // Alles fuer Menues und Auswahl.
     private int _menuStartRow;
     private int _lastWindowWidth;
     private int _lastWindowHeight;
 
-    // Zeigt das Hauptmenü und gibt den gewählten Index zurück.
+    // Zeigt Hauptmenue und gibt index zurueck.
     private int ShowMainMenuAndSelect()
     {
         return RunMenu("Admin — Hauptmenü", MainMenuItems, indexOnEscape: 6, isAdminMainMenuAscii: true);
@@ -25,7 +26,7 @@ public sealed partial class AdminPortal
         return selected;
     }
 
-    // Zentrale Menü-Logik: zeichnet, liest Eingaben, liefert Auswahl.
+    // Die eigentliche Menue-Schleife.
     private int RunMenu(string title, IReadOnlyList<string> lines, int indexOnEscape, bool isAdminMainMenuAscii)
     {
         int selectedIndex = 0;

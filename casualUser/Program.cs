@@ -7,6 +7,7 @@ namespace CasualUserApp;
 
 public sealed class CasualPortal
 {
+    // Alles eher simpel gespeichert, reicht fuer kleine App.
     private readonly List<string> notes = new List<string>();
     private readonly List<TodoItem> todos = new List<TodoItem>();
     private readonly List<ExpenseEntry> expenses = new List<ExpenseEntry>();
@@ -49,7 +50,7 @@ public sealed class CasualPortal
         { '8', "---.." }, { '9', "----." }
     };
 
-    // Startet das Portal von Anfang bis Ende.
+    // Startet das Ding ganz normal.
     public void Run()
     {
         PrepareConsole();
@@ -58,7 +59,7 @@ public sealed class CasualPortal
         SaveSettings();
     }
 
-    // Setzt die Konsole in einen sauberen Startzustand.
+    // Kleine Konsole-Vorbereitung.
     private static void PrepareConsole()
     {
         if (Console.IsOutputRedirected)
@@ -72,7 +73,7 @@ public sealed class CasualPortal
         Console.CursorVisible = true;
     }
 
-    // Zeigt das Hauptmenue und fuehrt gewaehlte Aktionen aus.
+    // Hauptmenue-Schleife.
     private void RunMainMenu()
     {
         bool keepRunning = true;
@@ -89,7 +90,7 @@ public sealed class CasualPortal
                 index = SelectMainMenuWithArrows();
             }
 
-            keepRunning = ExecuteMainAction(index);
+            keepRunning = DoMainAction(index);
 
             if (keepRunning)
             {
@@ -174,8 +175,8 @@ public sealed class CasualPortal
         }
     }
 
-    // Führt die gewählte Hauptaktion aus und sagt, ob das Programm weiterlaufen soll.
-    private bool ExecuteMainAction(int index)
+    // Macht den ausgewaehlten Menuepunkt.
+    private bool DoMainAction(int index)
     {
         if (index == 0) RunNoteWriter();
         else if (index == 1) RunNoteList();
@@ -200,7 +201,7 @@ public sealed class CasualPortal
         return true;
     }
 
-    // Schreibt eine einzelne neue Notiz.
+    // Speichert eine Notiz.
     private void RunNoteWriter()
     {
         Console.Clear();
@@ -226,7 +227,7 @@ public sealed class CasualPortal
         Console.WriteLine("Notiz gespeichert.");
     }
 
-    // Zeigt die Notizliste und bietet Zusatzaktionen an.
+    // Zeigt Notizen + kleine Extras.
     private void RunNoteList()
     {
         Console.Clear();
@@ -299,7 +300,7 @@ public sealed class CasualPortal
         }
     }
 
-    // Exportiert die Notizen als Textdatei.
+    // Exportiert Notizen in txt.
     private void ExportNotesToTxt()
     {
         string path = Path.Combine(AppContext.BaseDirectory, "notizen_export_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt");
@@ -315,7 +316,7 @@ public sealed class CasualPortal
         Console.WriteLine("Exportiert nach: " + path);
     }
 
-    // Steuert die komplette To-Do-Verwaltung.
+    // ToDo Menue.
     private void RunTodoList()
     {
         bool inMenu = true;
@@ -427,7 +428,7 @@ public sealed class CasualPortal
         return TodoPriority.High;
     }
 
-    // Rechnet zwei Zahlen mit einem einfachen Operator.
+    // Mini Taschenrechner.
     private static void RunCalculator()
     {
         Console.Clear();
@@ -1301,7 +1302,7 @@ public sealed class CasualPortal
         }
     }
 
-    // Liest eine ganze Zahl im erlaubten Bereich ein.
+    // Fragt so lange bis eine Zahl passt.
     private static int ReadInt(string prompt, int min, int max)
     {
         while (true)

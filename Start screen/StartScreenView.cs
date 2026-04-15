@@ -5,6 +5,7 @@ namespace StartScreen
 {
     public class StartScreenView
     {
+        // Bisschen Start-Show und dann normal weiter.
         private const string BrandName = "syscore";
         private static readonly string[] BannerSyscoreWide =
         [
@@ -31,13 +32,13 @@ namespace StartScreen
                 return;
             }
 
-            bool hadCursorState = OperatingSystem.IsWindows();
-            bool savedVisible = hadCursorState && Console.CursorVisible;
-            var savedEncoding = Console.OutputEncoding;
-            using var restore = new ConsoleRestoreScope(savedEncoding, hadCursorState, savedVisible);
+            bool isWin = OperatingSystem.IsWindows();
+            bool oldCursorVisible = isWin && Console.CursorVisible;
+            Encoding oldEncoding = Console.OutputEncoding;
+            using var restore = new ConsoleRestoreScope(oldEncoding, isWin, oldCursorVisible);
 
             Console.OutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-            if (hadCursorState)
+            if (isWin)
                 Console.CursorVisible = false;
 
             int w = Console.WindowWidth;
@@ -69,10 +70,10 @@ namespace StartScreen
         {
             try
             {
-                var fetch = RunGit("fetch");
+            var fetch = RunGit("fetch");
                 if (!fetch.ok)
                 {
-                    Console.WriteLine("Git fetch konnte nicht laufen. (Kein Git/Netzwerk/Remote?)");
+                    Console.WriteLine("Git fetch ging nicht. (Vielleicht kein Netz oder git?)");
                     return;
                 }
 
@@ -82,7 +83,7 @@ namespace StartScreen
                 int.TryParse((behind.output ?? "").Trim(), out cnt);
                 if (cnt <= 0) return;
 
-                Console.WriteLine("Neue Version verfügbar. Änderungen anzeigen und pullen? [J/N]");
+                Console.WriteLine("Neue Version da. Commits anschauen und pullen? [J/N]");
                 string? yn = Console.ReadLine();
                 if (!(yn ?? "").Trim().Equals("j", StringComparison.OrdinalIgnoreCase))
                     return;
@@ -92,7 +93,7 @@ namespace StartScreen
                 {
                     ShowCommitBlocks(log.output ?? "");
                 }
-                Console.WriteLine($"🔄 {cnt} neue Commits gefunden");
+                Console.WriteLine($"Es gibt {cnt} neue Commits.");
                 Console.WriteLine("Enter drücken zum Installieren...");
                 Console.ReadLine();
 
@@ -102,7 +103,7 @@ namespace StartScreen
                     Console.WriteLine("❌ Update fehlgeschlagen: " + pull.output);
                     return;
                 }
-                Console.WriteLine("✅ Update installiert! Programm wird neu gestartet...");
+                Console.WriteLine("Update fertig. Starte Programm neu...");
                 RestartCurrentProcess();
             }
             catch (Exception ex)

@@ -6,6 +6,7 @@ namespace AdminApp;
 
 public sealed class AiService
 {
+    // Simpler HTTP-Service fuer Gemini.
     private readonly HttpClient _httpClient;
     private string _apiKey;
     private string _model;
@@ -25,7 +26,7 @@ public sealed class AiService
 
     public async Task<string> SendMessageAsync(string prompt, List<Message> history)
     {
-        // TODO: das muss ich noch schöner machen
+        // Noch ziemlich direkt gebaut, reicht aber.
         string url = $"https://generativelanguage.googleapis.com/v1beta/models/{_model}:generateContent?key={_apiKey}";
         var contents = new List<object>();
         foreach (var m in history)

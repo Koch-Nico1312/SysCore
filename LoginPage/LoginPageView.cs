@@ -2,6 +2,8 @@ namespace LoginPage
 {
     public class LoginPageView
     {
+        private const int maxTry = 3;
+
         private static readonly string[] adminNames = new string[]
         {
             "Nico",
@@ -16,31 +18,56 @@ namespace LoginPage
             Console.ResetColor();
 
             (int width, int height) = GetConsoleSize();
-            int top = Math.Max(0, (height - 6) / 2);
+            int top = Math.Max(0, (height - 9) / 2);
+            int infoTop = top + 2;
+            int promptTop = top + 4;
 
-            WriteCenteredAt("═══ 𝓛𝓸𝓰𝓲𝓷 ═══", top, ConsoleColor.Cyan, width);
+            WriteCenteredAt("═══ Login ═══", top, ConsoleColor.Cyan, width);
+            WriteCenteredAt("Bitte Namen eingeben (oder 'exit' zum Beenden).", infoTop, ConsoleColor.Gray, width);
 
-            string prompt = "Wie heisst du? ";
-            int promptLeft = Math.Max(0, (width - prompt.Length) / 2);
-            int promptTop = top + 2;
-            Console.SetCursorPosition(promptLeft, promptTop);
-            Console.Write(prompt);
-            string name = (Console.ReadLine() ?? string.Empty).Trim();
-
-            bool isAdmin = IsAdminName(name);
-            WriteCenteredAt("Eingabe: " + (name.Length == 0 ? "(leer)" : name), promptTop + 2, null, width);
-
-            if (isAdmin)
+            for (int attempt = 1; attempt <= maxTry; attempt++)
             {
-                WriteCenteredAt("Admin erkannt - Zugriff gewaehrt.", promptTop + 3, ConsoleColor.Green, width);
+                string prompt = $"Wie heisst du?  [{attempt}/{maxTry}] ";
+                int promptLeft = Math.Max(0, (width - prompt.Length) / 2);
+                Console.SetCursorPosition(promptLeft, promptTop);
+                Console.Write(new string(' ', Math.Max(0, width - promptLeft)));
+                Console.SetCursorPosition(promptLeft, promptTop);
+                Console.Write(prompt);
+
+                string name = NormalizeName(Console.ReadLine());
+                if (name.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    WriteCenteredAt("Login abgebrochen. Starte als normaler Benutzer.", promptTop + 2, ConsoleColor.Yellow, width);
+                    Console.ResetColor();
+                    return false;
+                }
+
+                if (name.Length == 0)
+                {
+                    WriteCenteredAt("Leere Eingabe ist nicht erlaubt.", promptTop + 2, ConsoleColor.Red, width);
+                    continue;
+                }
+
+                bool isAdmin = IsAdminName(name);
+                WriteCenteredAt("Eingabe: " + name, promptTop + 2, ConsoleColor.Gray, width);
+
+                if (isAdmin)
+                {
+                    WriteCenteredAt("Admin erkannt - Zugriff gewaehrt.", promptTop + 3, ConsoleColor.Green, width);
+                    Console.ResetColor();
+                    return true;
+                }
+
+                if (attempt < maxTry)
+                {
+                    WriteCenteredAt("Kein Admin. Bitte erneut versuchen.", promptTop + 3, ConsoleColor.Yellow, width);
+                }
             }
-            else
-            {
-                WriteCenteredAt("Kein Admin - normaler Zugriff.", promptTop + 3, ConsoleColor.Yellow, width);
-            }
+
+            WriteCenteredAt("Kein Admin erkannt - normaler Zugriff.", promptTop + 3, ConsoleColor.Yellow, width);
 
             Console.ResetColor();
-            return isAdmin;
+            return false;
         }
 
         private static (int Width, int Height) GetConsoleSize()
@@ -82,6 +109,11 @@ namespace LoginPage
             }
 
             return false;
+        }
+
+        private static string NormalizeName(string? input)
+        {
+            return (input ?? string.Empty).Trim();
         }
     }
 }

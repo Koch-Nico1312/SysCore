@@ -8,7 +8,7 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // Einstiegspunkt für den Systemmonitor.
+    // Start vom Systemmonitor.
     private void RunSystemMonitorByPlatform()
     {
         Console.WriteLine("=== System Monitor ===");
@@ -21,9 +21,7 @@ public sealed partial class AdminPortal
         RunSystemMonitorWindows();
     }
 
-    // WICHTIG:
-    // Diese Methode nutzt PerformanceCounter (Windows-System-API).
-    // Das ist fortgeschritten, wir behalten es für die gleiche Funktion.
+    // Windows API Zeug, lassen wir einfach so drin.
     [SupportedOSPlatform("windows")]
     private void RunSystemMonitorWindows()
     {

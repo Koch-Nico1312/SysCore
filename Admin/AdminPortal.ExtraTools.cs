@@ -5,8 +5,7 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // record struct ist hier nett weil nur kleine Werte drin sind
-    // und wir es oft nur kurz herumreichen.
+    // Kleine Daten fuer Quiz-Ergebnis.
     private readonly record struct QuizResult(int Correct, int Wrong);
 
     private sealed record ExpenseEntry(DateTime Date, string Category, decimal Amount, string Note);

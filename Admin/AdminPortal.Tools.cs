@@ -9,7 +9,7 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // Einfache Auswahl für typische Umrechnungen.
+    // Standard-Rechner und kleine Tools.
     private void RunUnitConverter()
     {
         Console.WriteLine("=== Einheitenrechner ===");
@@ -445,7 +445,7 @@ public sealed partial class AdminPortal
     {
         Console.WriteLine("=== Ausgaben-Tracker ===");
         bool fertig = false;
-        List<ExpenseEntry> entries = [];
+        List<SimpleExpenseEntry> entries = [];
         while (!fertig)
         {
             Console.WriteLine("1) Neu  2) Uebersicht  3) Ende");
@@ -470,7 +470,7 @@ public sealed partial class AdminPortal
                     Console.WriteLine("Nur positive Werte.");
                     continue;
                 }
-                ExpenseEntry e = new ExpenseEntry();
+                SimpleExpenseEntry e = new SimpleExpenseEntry();
                 e.Category = cat;
                 e.Amount = amount;
                 entries.Add(e);
@@ -488,7 +488,7 @@ public sealed partial class AdminPortal
     }
 
     // Zeigt die Ausgaben gesamt und pro Kategorie ohne LINQ.
-    private static void PrintExpenseOverview(List<ExpenseEntry> entries)
+    private static void PrintExpenseOverview(List<SimpleExpenseEntry> entries)
     {
         decimal total = 0m;
         for (int i = 0; i < entries.Count; i++)
@@ -502,7 +502,7 @@ public sealed partial class AdminPortal
         List<decimal> sums = new List<decimal>();
         for (int i = 0; i < entries.Count; i++)
         {
-            ExpenseEntry e = entries[i];
+            SimpleExpenseEntry e = entries[i];
             int idx = FindCategoryIndex(cats, e.Category);
             if (idx == -1)
             {
@@ -573,7 +573,7 @@ public sealed partial class AdminPortal
         public int CorrectIndex { get; private set; }
     }
 
-    private sealed class ExpenseEntry
+    private sealed class SimpleExpenseEntry
     {
         public string Category { get; set; } = "Allgemein";
         public decimal Amount { get; set; }

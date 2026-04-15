@@ -1,9 +1,10 @@
-//Hier hab ich mir Hilfe genommen mit verschieden Tools
+// Ja, hier ist viel WinAPI Kram drin.
 using System.Runtime.InteropServices;
 
 namespace AdminApp;
 internal static class ConsoleInputWindows
 {
+    // Nur die wichtigsten Konstanten fuer Input-Events.
     internal const int StdInputHandle = -10;
 
     internal const ushort KeyEvent = 0x0001;

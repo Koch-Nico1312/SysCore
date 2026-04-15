@@ -11,11 +11,12 @@ namespace SysCore
 {
     public class Program
     {
+        // Einfacher Hauptablauf: Start -> Login -> passendes Portal.
         public static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            var startScreen = new StartScreenView();
-            startScreen.ShowStartScreen();
+            StartScreenView start = new StartScreenView();
+            start.ShowStartScreen();
 
             if (!Console.IsOutputRedirected)
             {
@@ -23,18 +24,18 @@ namespace SysCore
                 Console.ResetColor();
             }
 
-            var login = new LoginPageView();
-            bool isAdmin = login.ShowLogin();
+            LoginPageView loginPage = new LoginPageView();
+            bool adminMode = loginPage.ShowLogin();
 
-            if (isAdmin)
+            if (adminMode)
             {
-                var admin = new AdminPortal();
+                AdminPortal admin = new AdminPortal();
                 admin.Run();
             }
             else
             {
-                var casual = new CasualPortal();
-                casual.Run();
+                CasualPortal user = new CasualPortal();
+                user.Run();
             }
         }
     }

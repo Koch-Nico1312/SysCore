@@ -5,6 +5,7 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
+    // Kleine Helfer zum sicheren Datei lesen.
     private static string? ReadTextFileSafe(string path)
     {
         try

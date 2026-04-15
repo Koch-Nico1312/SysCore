@@ -13,12 +13,13 @@ namespace AdminApp;
 // Das ist hier nur eine Design-Entscheidung und ändert nichts am Grundablauf.
 public sealed partial class AdminPortal
 {
+    // Hier ist einfach das Admin-Hauptding drin.
     // nint ist ein Zahlen-Typ für "native" Handles (betriebssystemnahe Werte).
     // Wir brauchen ihn wegen Windows-Konsolen-Eingabe über API-Aufrufe.
     // Das ist fortgeschritten und muss noch nicht komplett verstanden werden.
     private nint _consoleInputHandle;
 
-    /// <summary>Startet die Admin-Oberfläche (visuell oder vereinfacht bei Umleitung).</summary>
+    /// <summary>Startet Admin-Menue (normal oder Textmodus).</summary>
     public void Run()
     {
         // Wenn Ausgabe umgeleitet ist (z. B. in eine Datei), nehmen wir ein einfaches Textmenü.
@@ -36,8 +37,8 @@ public sealed partial class AdminPortal
         Console.OutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
         _consoleInputHandle = GetStandardInputHandle();
         InitializeAdminMenuPerformanceCounters();
-        bool shouldContinue = true;
-        while (shouldContinue)
+        bool run = true;
+        while (run)
         {
             int mainSelection = ShowMainMenuAndSelect();
             // 0 = Youtube schauen
@@ -98,7 +99,7 @@ public sealed partial class AdminPortal
             // 6 = Beenden
             if (mainSelection == 6)
             {
-                shouldContinue = false;
+                run = false;
                 continue;
             }
         }

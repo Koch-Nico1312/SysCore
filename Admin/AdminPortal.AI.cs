@@ -4,7 +4,9 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // record ist praktisch für config-daten, weil man mit "with" einfach kopieren+ändern kann.
+    private const string FreeGeminiModel = "gemini-2.0-flash";
+
+    // Einfaches Config-Objekt fuer API-Key + Modell.
     private sealed record GeminiConfig(string gemini_api_key, string gemini_model);
 
     private void RunGeminiChatModule()
@@ -36,14 +38,6 @@ public sealed partial class AdminPortal
             {
                 history.Clear();
                 Console.WriteLine("Verlauf geleert.");
-                continue;
-            }
-
-            if (msg.Equals("model", StringComparison.OrdinalIgnoreCase))
-            {
-                cfg = ChangeGeminiModel(cfg);
-                SaveGeminiConfig(cfg);
-                svc.UpdateSettings(cfg.gemini_api_key, cfg.gemini_model);
                 continue;
             }
 
@@ -89,9 +83,7 @@ public sealed partial class AdminPortal
         string path = BuildConfigFilePath();
         GeminiConfig? cfg = ReadJsonFileSafe<GeminiConfig>(path);
         if (cfg == null)
-        {
-            cfg = new GeminiConfig("", "");
-        }
+            cfg = new GeminiConfig("", FreeGeminiModel);
 
         if (string.IsNullOrWhiteSpace(cfg.gemini_api_key))
         {
@@ -105,25 +97,11 @@ public sealed partial class AdminPortal
             cfg = cfg with { gemini_api_key = api };
         }
 
-        if (string.IsNullOrWhiteSpace(cfg.gemini_model))
-        {
-            cfg = ChangeGeminiModel(cfg);
-        }
+        // Admin AI bleibt absichtlich auf dem kostenlosen Modell.
+        cfg = cfg with { gemini_model = FreeGeminiModel };
 
         SaveGeminiConfig(cfg);
         return cfg;
-    }
-
-    private GeminiConfig ChangeGeminiModel(GeminiConfig cfg)
-    {
-        Console.WriteLine("Modell wählen:");
-        Console.WriteLine("1) gemini-2.0-flash  (Schnell, gratis, empfohlen)");
-        Console.WriteLine("2) gemini-2.5-pro    (Bessere Qualität, strengere Rate Limits)");
-        Console.Write("Option: ");
-        string? m = Console.ReadLine();
-        string x = m?.Trim() ?? "1";
-        string model = x == "2" ? "gemini-2.5-pro" : "gemini-2.0-flash";
-        return cfg with { gemini_model = model };
     }
 
     private static void SaveGeminiConfig(GeminiConfig cfg)

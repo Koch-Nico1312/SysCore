@@ -2,13 +2,19 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // Ermittelt den App-Datenordner und legt ihn bei Bedarf an.
+    // Holt den Datenordner und erstellt ihn wenn noetig.
     private static string GetSysCoreDataDirectory()
     {
         string basis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string ordner = Path.Combine(basis, "SysCore");
         Directory.CreateDirectory(ordner);
         return ordner;
+    }
+
+    // Alter Name, damit alter Code weiter laeuft.
+    private static string SysCoreDatenVerzeichnisErmitteln()
+    {
+        return GetSysCoreDataDirectory();
     }
 
     // Pfad für die Aufgaben-Datei.

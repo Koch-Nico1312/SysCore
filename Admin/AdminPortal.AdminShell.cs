@@ -6,9 +6,8 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // WICHTIG:
-    // PerformanceCounter ist eine Windows-spezifische API für Systemwerte (CPU/RAM).
-    // Das ist fortgeschritten, wir lassen es für gleiche Funktionalität im Projekt drin.
+    // Hier steckt die ganze Admin-Optik drin.
+    // PerformanceCounter ist bisschen advanced, aber funktioniert gut fuer CPU/RAM.
     private PerformanceCounter? _adminMenuCpu;
     private PerformanceCounter? _adminMenuRam;
     private long _adminMenuLastSystemBarMs;

@@ -5,6 +5,7 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
+    // Starter fuer externe Programme.
     private void RunExternalProgramLauncher()
     {
         Console.WriteLine("╔══════════════════════════════╗");
