@@ -1,12 +1,7 @@
+//Hier hab ich mir Hilfe genommen mit verschieden Tools
 using System.Runtime.InteropServices;
 
 namespace AdminApp;
-
-// WICHTIG FÜR DICH:
-// Diese Datei kapselt Windows-API-Aufrufe für Konsolen-Eingaben (Maus, Tasten, Fenstergröße).
-// Begriffe wie DllImport, StructLayout, FieldOffset und nint sind fortgeschritten.
-// Wir lassen das so, weil es für die Windows-Konsole technisch nötig ist.
-// Du musst das jetzt noch nicht im Detail beherrschen.
 internal static class ConsoleInputWindows
 {
     internal const int StdInputHandle = -10;

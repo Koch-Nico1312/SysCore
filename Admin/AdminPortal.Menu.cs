@@ -18,8 +18,8 @@ public sealed partial class AdminPortal
         string[] entries = new string[AdminProgramEntries.Length + 1];
         for (int i = 0; i < AdminProgramEntries.Length; i++)
             entries[i] = AdminProgramEntries[i];
-        entries[^1] = "<< Zurück";
-        int selected = RunMenu("Programme starten", entries, indexOnEscape: entries.Length - 1, isAdminMainMenuAscii: false);
+        entries[entries.Length - 1] = "<< Zurück";
+        int selected = RunMenu("Programme starten", entries, indexOnEscape: entries.Length - 1, isAdminMainMenuAscii: true);
         if (selected == entries.Length - 1)
             return -1;
         return selected;
@@ -336,13 +336,27 @@ public sealed partial class AdminPortal
             return selectedIndex;
         if (vk == 0x26)
         {
-            selectedIndex = selectedIndex <= 0 ? lineCount - 1 : selectedIndex - 1;
+            if (selectedIndex <= 0)
+            {
+                selectedIndex = lineCount - 1;
+            }
+            else
+            {
+                selectedIndex = selectedIndex - 1;
+            }
             return null;
         }
 
         if (vk == 0x28)
         {
-            selectedIndex = selectedIndex >= lineCount - 1 ? 0 : selectedIndex + 1;
+            if (selectedIndex >= lineCount - 1)
+            {
+                selectedIndex = 0;
+            }
+            else
+            {
+                selectedIndex = selectedIndex + 1;
+            }
             return null;
         }
 
@@ -358,13 +372,27 @@ public sealed partial class AdminPortal
             return selectedIndex;
         if (key.Key == ConsoleKey.UpArrow)
         {
-            selectedIndex = selectedIndex <= 0 ? lineCount - 1 : selectedIndex - 1;
+            if (selectedIndex <= 0)
+            {
+                selectedIndex = lineCount - 1;
+            }
+            else
+            {
+                selectedIndex = selectedIndex - 1;
+            }
             return null;
         }
 
         if (key.Key == ConsoleKey.DownArrow)
         {
-            selectedIndex = selectedIndex >= lineCount - 1 ? 0 : selectedIndex + 1;
+            if (selectedIndex >= lineCount - 1)
+            {
+                selectedIndex = 0;
+            }
+            else
+            {
+                selectedIndex = selectedIndex + 1;
+            }
             return null;
         }
 

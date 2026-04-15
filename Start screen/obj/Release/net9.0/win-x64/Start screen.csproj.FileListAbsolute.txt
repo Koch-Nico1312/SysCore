@@ -1,0 +1,12 @@
+C:\Users\Nico\Desktop\SySCore\Start screen\bin\Release\net9.0\win-x64\Start screen.deps.json
+C:\Users\Nico\Desktop\SySCore\Start screen\bin\Release\net9.0\win-x64\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\bin\Release\net9.0\win-x64\Start screen.pdb
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.AssemblyInfoInputs.cache
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.AssemblyInfo.cs
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.sourcelink.json
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\refint\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\Start screen.pdb
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Release\net9.0\win-x64\ref\Start screen.dll

@@ -7,7 +7,7 @@
 
 ## Übersicht
 
-SysCore ist eine vollständige Konsolenanwendung, die nach einem animierten Startbildschirm und einem Login-System einen Admin-Bereich mit 15 eingebauten Tools öffnet. Die Oberfläche passt sich dynamisch an die Konsolenbreite an, unterstützt Maus- und Tastaturnavigation und läuft sowohl interaktiv als auch in umgeleiteten Ausgaben (z. B. Pipes).
+SysCore ist eine vollständige Konsolenanwendung, die nach einem animierten Startbildschirm und einem Login-System je nach Rolle das Admin-Portal oder das Casual-Portal öffnet. Die Oberfläche passt sich dynamisch an die Konsolenbreite an, unterstützt Maus- und Tastaturnavigation und läuft sowohl interaktiv als auch in umgeleiteten Ausgaben (z. B. Pipes).
 
 ---
 
@@ -15,17 +15,18 @@ SysCore ist eine vollständige Konsolenanwendung, die nach einem animierten Star
 
 | Bereich | Was es macht |
 |---|---|
-| **Startbildschirm** | FIGlet-ASCII-Banner „SYSCORE" + Lade-Animation (~2,4 s) |
-| **Login** | Namenseingabe mit farbiger Ausgabe; Admin-Erkennung (case-insensitive) |
+| **Startbildschirm** | Zentrierter Unicode-Titel + ASCII-Banner + Ladebalken (~2,4 s) |
+| **Login** | Namenseingabe mit zentrierter Ausgabe; Admin-Erkennung (case-insensitive) |
 | **Admin-Portal** | Animiertes Hauptmenü mit Mausunterstützung + Live-Systemleiste |
-| **15 Programme** | Task Manager, Notizbuch, Passwort Manager, Kalender, Rechner, Caesar, Text Analyzer, Währungsrechner, QR-Code, Datumrechner, System Monitor, ASCII Art, Farbpaletten, Musik Player |
+| **Casual-Portal** | Eigenständiges Menü mit Endnutzer-Tools (Notizen, Rechner, Timer u. v. m.) |
+| **19 Admin-Programme** | Siehe Liste unten |
 
 ---
 
 ## Voraussetzungen
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- Windows (empfohlen — einige Features wie System Monitor und Mauseingabe sind Windows-exklusiv)
+- Windows (empfohlen — System Monitor und Mauseingabe sind Windows-exklusiv)
 - Konsolenfenster mit min. ~80 Zeichen Breite für volle Darstellung
 
 ---
@@ -34,49 +35,42 @@ SysCore ist eine vollständige Konsolenanwendung, die nach einem animierten Star
 
 ```
 SysCore/
-├── Program.cs                  ← Einstiegspunkt (Start → Login → Admin)
+├── Program.cs                      ← Einstiegspunkt (Start → Login → Admin oder Casual)
 ├── SysCore.csproj
 ├── SysCore.sln
 │
 ├── Start screen/
-│   └── Program.cs              ← Animierter Startbildschirm mit ASCII-Banner
+│   └── StartScreenView.cs          ← Ladescreen mit Unicode-Titel, ASCII-Banner, Ladebalken
 │
 ├── LoginPage/
-│   └── loginPage.cs            ← Login-UI mit Admin-Erkennung
+│   └── LoginPageView.cs            ← Login-UI mit Admin-Erkennung (Nico / Palitsch / PALI)
 │
-└── Admin/
-    ├── AdminPortal.cs           ← Hauptlogik + Programm-Dispatcher
-    ├── AdminPortal.Menu.cs      ← Menüsystem (Tastatur + Maus)
-    ├── AdminPortal.AdminShell.cs← Systemleiste (CPU/RAM live), Admin-Banner
-    ├── AdminPortal.Tools.cs     ← Rechner, Caesar, QR, Währung, Datum, Text
-    ├── AdminPortal.Productivity.cs ← Task Manager, Notizbuch, Passwort Manager, Kalender
-    ├── AdminPortal.Storage.cs   ← Dateipfade + XOR/SHA256-Verschlüsselung
-    └── AdminPortal.SystemCreative.cs ← System Monitor, ASCII Art, Farbpaletten, Musik
+├── Admin/
+│   ├── AdminPortal.cs              ← Kern: Startlogik, Hauptmenü, Programm-Dispatcher
+│   ├── AdminPortal.AdminShell.cs   ← Layout, Banner, Systemleiste, Theme-Farben, UI-Update
+│   ├── AdminPortal.Menu.cs         ← Menü-Engine (Tastatur + Maus, Zeichnen, Navigation)
+│   ├── AdminPortal.Productivity.cs ← Task Manager, Notizbuch, Passwort Manager, Kalender
+│   ├── AdminPortal.Storage.cs      ← AppData-Pfade, XOR/SHA-256-Verschlüsselung
+│   ├── AdminPortal.SystemCreative.cs← System Monitor, ASCII Art, Farbpalette, Musik Player
+│   ├── AdminPortal.Tools.cs        ← Rechner, Caesar, QR, Währung, Datum, Text, Weltzeit,
+│   │                                  Würfelsimulator, Quiz, Ausgaben-Tracker
+│   └── ConsoleInputWindows.cs      ← Windows-API für Tastatur- und Mauseingabe
+│
+└── casualUser/
+    └── Program.cs                  ← Casual-Portal mit eigenem Menü und Endnutzer-Tools
 ```
-
 
 ---
 
 ## Installation & Start
 
-```bash
-# Repository klonen oder Ordner auf den Desktop legen
-cd SysCore
-
-# Bauen
-dotnet build
-
-# Starten
-dotnet run
-```
-
-Oder in Visual Studio: `SysCore.sln` öffnen → Als Startprojekt `SysCore` wählen → F5.
-
+## Download
+[⬇ SysCore.exe herunterladen](https://github.com/Koch-Nico1312/SysCore/releases/tag/v.1.0.0)
 ---
 
 ## Bedienung
 
-### Navigation im Menü
+### Navigation im Admin-Menü
 
 | Taste / Aktion | Funktion |
 |---|---|
@@ -91,8 +85,8 @@ Oder in Visual Studio: `SysCore.sln` öffnen → Als Startprojekt `SysCore` wäh
 Beim Start wirst du nach deinem Namen gefragt.  
 Admin-Namen (case-insensitive): **Nico**, **Palitsch**, **PALI**
 
-- Admin-Name erkannt → Admin-Portal öffnet sich  
-- Kein Admin → Programm endet (casual user mode noch in Entwicklung)
+- Admin-Name erkannt → Admin-Portal öffnet sich
+- Kein Admin-Name → Casual-Portal öffnet sich
 
 ---
 
@@ -125,7 +119,6 @@ Text ver- oder entschlüsseln mit beliebiger Verschiebung (1–25).
 ### 8. Text Analyzer
 Gibt Wörter, Zeichen (mit/ohne Leerzeichen) und Sätze eines Textes aus.
 
-
 ### 9. Währungsrechner
 Echtzeit-Wechselkurse via [Frankfurter API](https://www.frankfurter.app/).  
 Eingabe: Betrag, ISO-Quellwährung (z. B. `EUR`), ISO-Zielwährung (z. B. `USD`).
@@ -144,10 +137,22 @@ Beenden mit `Escape`, `Q` oder `Enter`.
 Wandelt Text (A–Z, 0–9, Leerzeichen) in einen 5-zeiligen Block-ASCII-Art-Banner um.
 
 ### 14. Farbpaletten Generator
-Erzeugt 5 zufällige harmonische Farbpaletten (je 5 Töne) als Hex-Codes direkt in der Konsole.
+Erzeugt zufällige harmonische Farbpaletten (je 5 Töne) als Hex-Codes direkt in der Konsole.
 
 ### 15. Musik Player
 Spielt eine lokale MP3-Datei ab (via NAudio). Pfad eingeben → Beliebige Taste stoppt die Wiedergabe.
+
+### 16. Weltzeit-Anzeige
+Zeigt die aktuelle Uhrzeit in mehreren Zeitzonen gleichzeitig an.
+
+### 17. Würfelsimulator
+Simuliert einen oder mehrere Würfelwürfe mit wählbarer Seitenzahl.
+
+### 18. Quiz
+Interaktives Multiple-Choice-Quiz direkt in der Konsole.
+
+### 19. Ausgaben-Tracker
+Einnahmen und Ausgaben erfassen und eine Übersicht anzeigen lassen.
 
 ---
 
@@ -158,7 +163,7 @@ Alle persistenten Daten werden unter `%APPDATA%\SysCore\` gespeichert und beim e
 ```
 %APPDATA%\SysCore\
 ├── admin_aufgaben.txt          ← Task Manager
-├── admin_passwort_tresor.txt   ← Passwort Manager (verschlüsselt)
+├── admin_passwort_tresor.txt   ← Passwort Manager (XOR-verschlüsselt)
 └── notizen/
     └── *.txt                   ← Notizbuch-Einträge
 ```
@@ -171,13 +176,14 @@ Alle persistenten Daten werden unter `%APPDATA%\SysCore\` gespeichert und beim e
 |---|---|
 | `QRCoder` | QR-Code-Generierung |
 | `NAudio` | MP3-Wiedergabe (Musik Player) |
+| `System.Configuration.ConfigurationManager` | Konfigurationsverwaltung |
+| `System.Diagnostics.PerformanceCounter` | CPU/RAM-Auslastung (System Monitor) |
 
 ---
 
 ## Bekannte Einschränkungen
 
 - System Monitor und Mauseingabe funktionieren nur unter **Windows**
-- Der `casualUser`-Modus (kein Admin-Login) ist noch nicht implementiert
 - Währungsrechner benötigt eine aktive **Internetverbindung**
 - Musik Player unterstützt derzeit nur **MP3**-Dateien
 

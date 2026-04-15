@@ -10,3 +10,15 @@ c:\Users\kochn_lrehka5\Desktop\SysCore\Start screen\obj\Debug\net9.0\Start scree
 c:\Users\kochn_lrehka5\Desktop\SysCore\Start screen\obj\Debug\net9.0\refint\Start screen.dll
 c:\Users\kochn_lrehka5\Desktop\SysCore\Start screen\obj\Debug\net9.0\Start screen.pdb
 c:\Users\kochn_lrehka5\Desktop\SysCore\Start screen\obj\Debug\net9.0\ref\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\bin\Debug\net9.0\Start screen.deps.json
+C:\Users\Nico\Desktop\SySCore\Start screen\bin\Debug\net9.0\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\bin\Debug\net9.0\Start screen.pdb
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.AssemblyInfoInputs.cache
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.AssemblyInfo.cs
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\refint\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.pdb
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\ref\Start screen.dll
+C:\Users\Nico\Desktop\SySCore\Start screen\obj\Debug\net9.0\Start screen.sourcelink.json
