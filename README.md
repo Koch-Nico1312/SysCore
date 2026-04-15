@@ -65,7 +65,7 @@ SysCore/
 ## Installation & Start
 
 ## Download
-[⬇ SysCore.exe herunterladen](https://github.com/Koch-Nico1312/SysCore/releases/tag/v.1.0.0)
+[SysCore.exe herunterladen](https://github.com/Koch-Nico1312/SysCore/releases/tag/v.1.0.1)
 ---
 
 ## Bedienung
