@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Start screen")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+338355531b23c9593084ca3e657f5674f65c6dce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f18c9d8eb2376bd3e1db1c1e23cb8091eb1b780c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Start screen")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Start screen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
