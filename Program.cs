@@ -5,6 +5,7 @@ using AdminApp;
 using CasualUserApp;
 using LoginPage;
 using StartScreen;
+using System.Text;
 
 namespace SysCore
 {
@@ -12,6 +13,7 @@ namespace SysCore
     {
         public static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             var startScreen = new StartScreenView();
             startScreen.ShowStartScreen();
 

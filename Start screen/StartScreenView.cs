@@ -1,4 +1,5 @@
 using System.Text;
+using System.Diagnostics;
 
 namespace StartScreen
 {
@@ -26,6 +27,7 @@ namespace StartScreen
             {
                 Console.Out.WriteLine(BrandName);
                 Thread.Sleep(TimeSpan.FromSeconds(2.4));
+                TryRunGitUpdateCheck();
                 return;
             }
 
@@ -60,6 +62,127 @@ namespace StartScreen
 
             int loadRow = Math.Min(h - 1, nameRow + 1);
             RunLoadingLine(loadRow, w, TimeSpan.FromSeconds(2.4));
+            TryRunGitUpdateCheck();
+        }
+
+        private static void TryRunGitUpdateCheck()
+        {
+            try
+            {
+                var fetch = RunGit("fetch");
+                if (!fetch.ok)
+                {
+                    Console.WriteLine("Git fetch konnte nicht laufen. (Kein Git/Netzwerk/Remote?)");
+                    return;
+                }
+
+                var behind = RunGit("rev-list --count HEAD..origin/main");
+                if (!behind.ok) return;
+                int cnt = 0;
+                int.TryParse((behind.output ?? "").Trim(), out cnt);
+                if (cnt <= 0) return;
+
+                Console.WriteLine("Neue Version verfügbar. Änderungen anzeigen und pullen? [J/N]");
+                string? yn = Console.ReadLine();
+                if (!(yn ?? "").Trim().Equals("j", StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                var log = RunGit("log HEAD..origin/main --format=\"- %s%n  %b\"");
+                if (log.ok)
+                {
+                    ShowCommitBlocks(log.output ?? "");
+                }
+                Console.WriteLine($"🔄 {cnt} neue Commits gefunden");
+                Console.WriteLine("Enter drücken zum Installieren...");
+                Console.ReadLine();
+
+                var pull = RunGit("pull");
+                if (!pull.ok)
+                {
+                    Console.WriteLine("❌ Update fehlgeschlagen: " + pull.output);
+                    return;
+                }
+                Console.WriteLine("✅ Update installiert! Programm wird neu gestartet...");
+                RestartCurrentProcess();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Update-Check Fehler: " + ex.Message);
+            }
+        }
+
+        private static void ShowCommitBlocks(string all)
+        {
+            string[] lines = all.Replace("\r", "").Split('\n');
+            StringBuilder tmp = new();
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("- "))
+                {
+                    if (tmp.Length > 0)
+                    {
+                        Console.WriteLine("════════════════════════════════════");
+                        Console.Write(tmp.ToString());
+                        Console.WriteLine("════════════════════════════════════");
+                        tmp.Clear();
+                    }
+                    tmp.AppendLine("📦 Commit: " + line.Substring(2));
+                }
+                else
+                {
+                    tmp.AppendLine("   " + line);
+                }
+            }
+            if (tmp.Length > 0)
+            {
+                Console.WriteLine("════════════════════════════════════");
+                Console.Write(tmp.ToString());
+                Console.WriteLine("════════════════════════════════════");
+            }
+        }
+
+        private static (bool ok, string output) RunGit(string args)
+        {
+            try
+            {
+                ProcessStartInfo psi = new("git", args);
+                psi.RedirectStandardOutput = true;
+                psi.RedirectStandardError = true;
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                using Process p = Process.Start(psi)!;
+                string o = p.StandardOutput.ReadToEnd();
+                string e = p.StandardError.ReadToEnd();
+                p.WaitForExit();
+                bool ok = p.ExitCode == 0;
+                return (ok, ok ? o : (o + Environment.NewLine + e));
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
+        private static void RestartCurrentProcess()
+        {
+            string? exe = Environment.ProcessPath;
+            if (string.IsNullOrWhiteSpace(exe))
+                return;
+
+            string[] args = Environment.GetCommandLineArgs();
+            string joined = "";
+            for (int i = 1; i < args.Length; i++)
+            {
+                if (i > 1) joined += " ";
+                joined += "\"" + args[i].Replace("\"", "\\\"") + "\"";
+            }
+
+            ProcessStartInfo psi = new();
+            psi.FileName = exe;
+            psi.Arguments = joined;
+            psi.UseShellExecute = true;
+            Process.Start(psi);
+            Environment.Exit(0);
         }
 
         private sealed class ConsoleRestoreScope : IDisposable
@@ -169,12 +292,18 @@ namespace StartScreen
         {
             if (row < 0 || row >= Console.WindowHeight) return;
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            ReadOnlySpan<string> spin = ["|", "/", "-", "\\"];
+            const int barLen = 10;
 
             while (sw.Elapsed < duration)
             {
-                string phase = spin[(int)(sw.Elapsed.TotalMilliseconds / 120 % spin.Length)];
-                string msg = $"Laden… {phase}";
+                double p = sw.Elapsed.TotalMilliseconds / duration.TotalMilliseconds;
+                if (p < 0) p = 0;
+                if (p > 1) p = 1;
+                int full = (int)Math.Round(p * barLen);
+                if (full < 0) full = 0;
+                if (full > barLen) full = barLen;
+                string b = new string('█', full) + new string('░', barLen - full);
+                string msg = $"Laden… {b}";
                 int dw = GetDisplayWidth(msg);
                 int pad = Math.Max(0, (windowWidth - dw) / 2);
                 Console.ForegroundColor = ConsoleColor.DarkYellow;

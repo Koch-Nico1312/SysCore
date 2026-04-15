@@ -1,0 +1,68 @@
+Erklärung zu den .cs Dateien (ohne obj/bin build dateien)
+=========================================================
+
+Program.cs
+- Hauptstart von SysCore.
+- Setzt UTF8, zeigt Startscreen, danach Login und leitet zu Admin oder Casual weiter.
+
+Start screen/StartScreenView.cs
+- Zeigt das Startbanner und Ladebalken mit Unicode.
+- Prüft beim Start auf Updates via git fetch/status/log/pull und kann das Programm neu starten.
+
+LoginPage/LoginPageView.cs
+- Macht den Login über Namenseingabe.
+- Erkennt Admin-Nutzer und gibt true/false zurück.
+
+casualUser/Program.cs
+- Enthält CasualPortal für nicht-Admin Benutzer.
+- Hat einfache Tools wie Notiz, Unit Converter, Datum und Settings.
+
+Admin/AdminPortal.cs
+- Kern vom AdminPortal.
+- Steuert Menüs und startet die einzelnen Tools über Index.
+
+Admin/AdminPortal.Menu.cs
+- Menü-Engine mit Tastatur und Maus (unter Windows).
+- Zeichnet Menüs und verarbeitet Auswahl/Navigation.
+
+Admin/AdminPortal.AdminShell.cs
+- Zeichnet die Admin-Ansicht und Systemleiste.
+- Zeigt CPU/RAM/Datum/Uhrzeit und Theme-Sachen.
+
+Admin/AdminPortal.Productivity.cs
+- Produktivitäts-Tools: Task Manager, Notizbuch, Passwort Manager, Kalender.
+- Aufgaben sind jetzt als record umgesetzt.
+
+Admin/AdminPortal.Tools.cs
+- Allgemeine Tools: Einheitenrechner, Taschenrechner, Caesar, Textanalyse, Währung, QR, Datum.
+
+Admin/AdminPortal.SystemCreative.cs
+- System/Kreativ-Tools: z. B. Systemmonitor, ASCII Art, Farbpalette, Musik.
+
+Admin/AdminPortal.Storage.cs
+- Helfer für Datenpfade im AppData-Ordner.
+- Enthält Funktionen für Passwort-Obfuscation und Config-Pfad.
+
+Admin/AdminPortal.FileReadHelpers.cs
+- Hilfsfunktionen zum sicheren Lesen von txt/json Dateien.
+- Nutzt StreamReader und JsonSerializer mit Fehlerbehandlung.
+
+Admin/AdminPortal.ExtraTools.cs
+- Neue Module: Weltzeit, Würfelsimulator, Quiz und Ausgaben-Tracker.
+- Nutzt Unicode-Ausgaben und Box-Drawing.
+
+Admin/AdminPortal.ExternalApps.cs
+- Neues Modul zum Starten externer Programme (notepad, explorer, eigene exe).
+- Enthält Fehlerbehandlung bei Startproblemen.
+
+Admin/AdminPortal.AI.cs
+- Chat-UI für Gemini AI im Admin-Menü.
+- Lädt/speichert API-Key + Modell in config.json und verwaltet Verlauf/Commands.
+
+Admin/AiService.cs
+- HTTP-Service für Gemini API.
+- Baut Request mit History und liest Antwort aus candidates[0].content.parts[0].text.
+
+Admin/ConsoleInputWindows.cs
+- Windows-spezifische Interop-Helfer für Konsolen-Input.
+- Wird für Maus-Events und Low-Level Input genutzt.

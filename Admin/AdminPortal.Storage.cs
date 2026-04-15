@@ -31,6 +31,12 @@ public sealed partial class AdminPortal
         return Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "admin_passwort_tresor.txt");
     }
 
+    // config fuer ai und andere settings
+    private static string BuildConfigFilePath()
+    {
+        return Path.Combine(SysCoreDatenVerzeichnisErmitteln(), "config.json");
+    }
+
     // Erzeugt aus dem Master-Passwort einen festen Schlüssel (SHA256).
     private static byte[] CreateMasterKeyFromPassword(string masterPassword)
     {

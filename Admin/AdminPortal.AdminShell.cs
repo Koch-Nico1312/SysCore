@@ -169,9 +169,10 @@ public sealed partial class AdminPortal
         {
             float cpu = _adminMenuCpu.NextValue();
             float ramMb = _adminMenuRam.NextValue();
+            float ramGb = ramMb / 1024f;
             return string.Format(CultureInfo.InvariantCulture,
-                "CPU gesamt: {0:0.#} %   RAM frei: {1:0} MB   {2}",
-                cpu, ramMb, DateTime.Now.ToString("HH:mm:ss", CultureInfo.CurrentCulture));
+                "⚡ CPU: {0:0.#}%   💾 RAM: {1:0.0} GB frei   🕒 {2}",
+                cpu, ramGb, DateTime.Now.ToString("HH:mm:ss", CultureInfo.CurrentCulture));
         }
 
         return BuildAdminMenuSystemFallbackLine1();
@@ -182,9 +183,10 @@ public sealed partial class AdminPortal
     {
         Process p = Process.GetCurrentProcess();
         long mb = p.WorkingSet64 / (1024 * 1024);
+        double gb = mb / 1024.0;
         return string.Format(CultureInfo.CurrentCulture,
-            "SysCore RAM: {0} MB   PID: {1}   {2}",
-            mb, p.Id, DateTime.Now.ToString("HH:mm:ss", CultureInfo.CurrentCulture));
+            "⚡ CPU: ?   💾 RAM: {0:0.0} GB frei   🕒 {1}",
+            gb, DateTime.Now.ToString("HH:mm:ss", CultureInfo.CurrentCulture));
     }
 
     // Erzeugt die zweite Infozeile mit Rechner/OS/Bitness.
@@ -193,7 +195,7 @@ public sealed partial class AdminPortal
         string name = Environment.MachineName;
         string os = Environment.OSVersion.Platform.ToString();
         string bit = Environment.Is64BitOperatingSystem ? "64-Bit" : "32-Bit";
-        return string.Format(CultureInfo.CurrentCulture, "Rechner: {0}   OS: {1}   {2}", name, os, bit);
+        return string.Format(CultureInfo.CurrentCulture, "╔══ {0} ══╗   ║ {1} ║   ╚══ {2} ══╝", name, os, bit);
     }
 
     // Initialisiert Counter für CPU/RAM.

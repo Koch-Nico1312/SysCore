@@ -5,13 +5,8 @@ namespace AdminApp;
 
 public sealed partial class AdminPortal
 {
-    // Kleine Datenklasse für eine Aufgabe.
-    private sealed class TaskEntry
-    {
-        internal string Titel = "";
-        internal DateTime Deadline;
-        internal bool Erledigt;
-    }
+    // record passt hier, weil Aufgaben eher Daten sind (value equality usw.)
+    private sealed record TaskEntry(string Titel, DateTime Deadline, bool Erledigt);
 
     // Hauptmenü vom Task-Manager.
     private void RunTaskManager()
@@ -75,7 +70,7 @@ public sealed partial class AdminPortal
         }
 
         List<TaskEntry> liste = LoadTasksFromFile();
-        liste.Add(new TaskEntry { Titel = titel, Deadline = deadline, Erledigt = false });
+        liste.Add(new TaskEntry(titel, deadline, false));
         SaveTasksToFile(liste);
         Console.WriteLine("Gespeichert.");
     }
@@ -89,7 +84,8 @@ public sealed partial class AdminPortal
         string? n = Console.ReadLine();
         if (!int.TryParse(n, out int idx) || idx < 1 || idx > liste.Count)
             return;
-        liste[idx - 1].Erledigt = true;
+        TaskEntry old = liste[idx - 1];
+        liste[idx - 1] = old with { Erledigt = true };
         SaveTasksToFile(liste);
     }
 
@@ -124,7 +120,7 @@ public sealed partial class AdminPortal
         if (!DateTime.TryParseExact(teile[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime deadline))
             return null;
         bool erl = teile[2] == "1" || teile[2].Equals("true", StringComparison.OrdinalIgnoreCase);
-        return new TaskEntry { Titel = titel, Deadline = deadline, Erledigt = erl };
+        return new TaskEntry(titel, deadline, erl);
     }
 
     // Schreibt die Aufgabenliste wieder in die Datei.
@@ -232,7 +228,9 @@ public sealed partial class AdminPortal
         }
 
         Console.WriteLine("---");
-        Console.WriteLine(File.ReadAllText(pfad, Encoding.UTF8));
+        string? txt = ReadTextFileSafe(pfad);
+        if (txt != null)
+            Console.WriteLine(txt);
         Console.WriteLine("---");
     }
 
@@ -250,7 +248,7 @@ public sealed partial class AdminPortal
         foreach (string pfad in dateien)
         {
             string name = Path.GetFileNameWithoutExtension(pfad);
-            string text = File.ReadAllText(pfad, Encoding.UTF8);
+            string text = ReadTextFileSafe(pfad) ?? "";
             if (name.Contains(needle, StringComparison.OrdinalIgnoreCase) || text.Contains(needle, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine(Path.GetFileNameWithoutExtension(pfad));

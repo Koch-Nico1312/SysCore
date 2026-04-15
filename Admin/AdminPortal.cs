@@ -200,6 +200,12 @@ public sealed partial class AdminPortal
                 case 12: RunAsciiArtGenerator(); break;
                 case 13: RunColorPaletteGenerator(); break;
                 case 14: RunMusicPlayer(); break;
+                case 15: RunWorldClockTool(); break;
+                case 16: RunDiceSimulator(); break;
+                case 17: RunQuizGame(); break;
+                case 18: RunExpenseTracker(); break;
+                case 19: RunExternalProgramLauncher(); break;
+                case 20: RunGeminiChatModule(); break;
             }
 
             return;
@@ -225,6 +231,12 @@ public sealed partial class AdminPortal
             case 12: RunAsciiArtGenerator(); break;
             case 13: RunColorPaletteGenerator(); break;
             case 14: RunMusicPlayer(); break;
+            case 15: RunWorldClockTool(); break;
+            case 16: RunDiceSimulator(); break;
+            case 17: RunQuizGame(); break;
+            case 18: RunExpenseTracker(); break;
+            case 19: RunExternalProgramLauncher(); break;
+            case 20: RunGeminiChatModule(); break;
         }
     }
 
@@ -251,21 +263,27 @@ public sealed partial class AdminPortal
 
     private static readonly string[] AdminProgramEntries =
     [
-        "Task Manager (Aufgaben + Deadlines)",
-        "Notizbuch (speichern / suchen)",
-        "Passwort Manager (verschlüsselt)",
-        "Kalender (Monatsansicht)",
-        "Einheitenrechner",
-        "Taschenrechner mit Verlauf",
+        "📋 Task Manager (Aufgaben + Deadlines)",
+        "📓 Notizbuch (speichern / suchen)",
+        "🔑 Passwort Manager (verschlüsselt)",
+        "📅 Kalender (Monatsansicht)",
+        "🧮 Einheitenrechner",
+        "🖩 Taschenrechner mit Verlauf",
         "Caesar / Verschlüsselungs-Tool",
         "Text Analyzer",
-        "Währungsrechner (API)",
+        "💱 Währungsrechner (API)",
         "QR-Code Generator (Text)",
         "Datumrechner",
         "System Monitor (CPU, RAM)",
         "ASCII Art Generator",
         "Farbpaletten Generator",
-        "Musik Player (MP3)"
+        "Musik Player (MP3)",
+        "🌍 Weltzeit",
+        "🎲 Würfelsimulator",
+        "❓ Quiz",
+        "📊 Ausgaben-Tracker",
+        "🚀 Programmstarter",
+        "🤖 Gemini AI Chat"
     ];
 
     // Oeffnet eine Webseite im Standardbrowser.
