@@ -34,7 +34,7 @@ namespace LoginPage
 
             for (int attempt = 1; attempt <= maxTry; attempt++)
             {
-                string prompt = $"Wie hei?t du?  [{attempt}/{maxTry}] ";
+                string prompt = $"Wie heißt du?  [{attempt}/{maxTry}] ";
                 int promptLeft = Math.Max(0, (width - prompt.Length) / 2);
                 Console.SetCursorPosition(promptLeft, promptTop);
                 Console.Write(new string(' ', Math.Max(0, width - promptLeft)));
@@ -60,7 +60,7 @@ namespace LoginPage
 
                 if (isAdmin)
                 {
-                    WriteCenteredAt("Admin erkannt - Zugriff gewaehrt.", promptTop + 3, ConsoleColor.Green, width);
+                    WriteCenteredAt("Admin erkannt - Zugriff gewährt.", promptTop + 3, ConsoleColor.Green, width);
                     Console.ResetColor();
                     return true;
                 }

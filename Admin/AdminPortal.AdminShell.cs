@@ -231,7 +231,7 @@ public sealed partial class AdminPortal
         return max <= fensterBreite - 2;
     }
 
-    // Zeichnet das neue 60/40-Retro-Layout fuer das Hauptmenue.
+    // Zeichnet das neue 60/40-Retro-Layout für das Hauptmenü.
     private void DrawAdminRetroLayout(IReadOnlyList<string> zeilen, int markiert)
     {
         int breite = Console.WindowWidth;
@@ -267,8 +267,8 @@ public sealed partial class AdminPortal
             DrawAdminMainMenuAsciiBanner(startZeile: bannerStartZeile, fensterBreite: Math.Max(1, linkeBreite - 1));
         }
 
-        // Menue startet standardmaessig unter dem Banner.
-        // Bei kleinen Fenstern wird es so weit wie noetig nach oben geschoben,
+        // Menü startet standardmaessig unter dem Banner.
+        // Bei kleinen Fenstern wird es so weit wie nötig nach oben geschoben,
         // bleibt aber oberhalb der Hilfezeile.
         int bevorzugterMenueStart = bannerStartZeile + AdminHauptmenüAsciiBanner.Length + bannerAbstandZumMenue;
         int spaetesterMenueStart = Math.Max(1, hoehe - 2 - zeilen.Count);
@@ -332,7 +332,7 @@ public sealed partial class AdminPortal
         UpdateAdminRetroTimeAndDate(immediate: true);
     }
 
-    // Schreibt Text rechtsbuendig innerhalb der rechten Spalte.
+    // Schreibt Text rechtsbündig innerhalb der rechten Spalte.
     private void WriteAdminRetroRightAligned(int row, string text)
     {
         if (row < 0 || row >= Console.WindowHeight)
@@ -398,7 +398,7 @@ public sealed partial class AdminPortal
         _adminRetroVolumeX = _adminRetroRechtsStartX + _adminRetroRechtsBreite - voll.Length;
     }
 
-    // Baut den ASCII-Balken fuer Lautstaerke.
+    // Baut den ASCII-Balken für Lautstaerke.
     private string BuildAdminRetroVolumeText()
     {
         const int gesamt = 10;
@@ -414,7 +414,7 @@ public sealed partial class AdminPortal
         return "Volume: [" + balken + "] " + _adminRetroLautstaerke + "%";
     }
 
-    // Erhoeht oder verringert die Lautstaerke in 5er-Schritten.
+    // Erhöht oder verringert die Lautstaerke in 5er-Schritten.
     private void ChangeAdminRetroVolume(int delta)
     {
         _adminRetroLautstaerke += delta;
@@ -430,7 +430,7 @@ public sealed partial class AdminPortal
         WriteAdminRetroSongLine();
     }
 
-    // Liefert Speicher-Info fuer C:\ im gewuenschten Format.
+    // Liefert Speicher-Info für C:\ im gewünschten Format.
     private static string BuildAdminRetroStorageText()
     {
         try

@@ -280,7 +280,7 @@ public sealed partial class AdminPortal
         "🤖 Gemini AI Chat"
     ];
 
-    // Oeffnet eine Webseite im Standardbrowser.
+    // Öffnet eine Webseite im Standardbrowser.
     private static void OpenUrlInBrowser(string url)
     {
         try

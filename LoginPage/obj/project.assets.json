@@ -8,23 +8,23 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\kochn_lrehka5\\.nuget\\packages\\": {},
+    "C:\\Users\\Nico\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\LoginPage\\LoginPage.csproj",
+      "projectUniqueName": "C:\\Users\\Nico\\Desktop\\SySCore\\LoginPage\\LoginPage.csproj",
       "projectName": "LoginPage",
-      "projectPath": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\LoginPage\\LoginPage.csproj",
-      "packagesPath": "C:\\Users\\kochn_lrehka5\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kochn_lrehka5\\Desktop\\SysCore\\LoginPage\\obj\\",
+      "projectPath": "C:\\Users\\Nico\\Desktop\\SySCore\\LoginPage\\LoginPage.csproj",
+      "packagesPath": "C:\\Users\\Nico\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Nico\\Desktop\\SySCore\\LoginPage\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\kochn_lrehka5\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Nico\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -52,7 +52,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -68,12 +68,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.11, 9.0.11]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[9.0.11, 9.0.11]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[9.0.11, 9.0.11]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
