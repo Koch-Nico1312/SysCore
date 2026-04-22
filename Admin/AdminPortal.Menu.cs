@@ -68,7 +68,7 @@ public sealed partial class AdminPortal
 
                     if (rec.EventType == ConsoleInputWindows.MouseEvent)
                     {
-                        int? active = HandleMouseForMenu(rec.MouseEvent, lines.Count, ref selectedIndex, ref redraw);
+                        int? active = HandleMouseForMenu(rec.MouseEvent, lines.Count, ref selectedIndex, ref redraw, title, lines, isAdminMainMenuAscii);
                         if (active.HasValue)
                             return active.Value;
                     }
@@ -295,7 +295,8 @@ public sealed partial class AdminPortal
     }
 
     // Mausbewegung/Mausklick für Menüauswahl auswerten.
-    private int? HandleMouseForMenu(ConsoleInputWindows.MouseEventRecord mouse, int lineCount, ref int selectedIndex, ref bool redraw)
+    private int? HandleMouseForMenu(ConsoleInputWindows.MouseEventRecord mouse, int lineCount, ref int selectedIndex, ref bool redraw,
+        string title, IReadOnlyList<string> lines, bool isAdminMainMenuAscii)
     {
         short y = mouse.MousePosition.Y;
         if (y < 0)
@@ -308,8 +309,16 @@ public sealed partial class AdminPortal
         {
             if (inLine && index != selectedIndex)
             {
+                int w = Console.WindowWidth;
+                int h = Console.WindowHeight;
+                if (w <= 0) w = 80;
+                if (h <= 0) h = 25;
+
+                // Nur die zwei betroffenen Zeilen neu malen – kein Console.Clear(), kein Flackern.
+                RedrawMenuRow(lines[selectedIndex], selectedIndex, false, w, h, isAdminMainMenuAscii);
+                RedrawMenuRow(lines[index],         index,         true,  w, h, isAdminMainMenuAscii);
                 selectedIndex = index;
-                redraw = true;
+                // redraw absichtlich NICHT auf true setzen
             }
 
             return null;
@@ -325,6 +334,64 @@ public sealed partial class AdminPortal
             return null;
 
         return index;
+    }
+
+    // Malt eine einzelne Menüzeile ohne den Rest des Bildschirms anzufassen.
+    private void RedrawMenuRow(string text, int menuIndex, bool aktiv, int w, int h, bool isRetroLayout)
+    {
+        int row = _menuStartRow + menuIndex;
+        if (row < 0 || row >= h)
+            return;
+
+        if (isRetroLayout)
+        {
+            // Retro-Layout: Items starten bei x=3, linke Hälfte (60% der Breite)
+            int linkeBreite = (w * 60) / 100;
+            int feldBreite = Math.Max(1, linkeBreite - 2);
+
+            Console.SetCursorPosition(1, row);
+            Console.Write(new string(' ', feldBreite));
+            Console.SetCursorPosition(3, row);
+
+            if (aktiv)
+            {
+                Console.ForegroundColor = _themeHighlightForeground;
+                Console.BackgroundColor = _themeHighlightBackground;
+                Console.Write("» " + text);
+            }
+            else
+            {
+                Console.ForegroundColor = _themePrimary;
+                Console.BackgroundColor = _themeBackground;
+                Console.Write("  " + text);
+            }
+            Console.ResetColor();
+            Console.ForegroundColor = _themePrimary;
+            Console.BackgroundColor = _themeBackground;
+        }
+        else
+        {
+            // Normales Layout: zentriert
+            Console.SetCursorPosition(0, row);
+            Console.Write(new string(' ', w));
+
+            int dw = EstimateDisplayWidth(text);
+            int pad = Math.Max(0, (w - dw) / 2);
+            Console.SetCursorPosition(pad, row);
+
+            if (aktiv)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+
+            Console.Write(text);
+            Console.ResetColor();
+        }
     }
 
     // Tastatur-Ereignisse aus Windows-Inputrecord auswerten.

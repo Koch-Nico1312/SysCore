@@ -248,11 +248,17 @@ namespace StartScreen
         private static void WriteBannerCentered(IReadOnlyList<string> lines, int startRow, int windowWidth)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
+            // Längste Zeile bestimmen → alle Zeilen gleich weit einrücken
+            int maxDw = 0;
+            foreach (var l in lines)
+            {
+                int lw = GetDisplayWidth(l);
+                if (lw > maxDw) maxDw = lw;
+            }
+            int pad = Math.Max(0, (windowWidth - maxDw) / 2);
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i];
-                int dw = GetDisplayWidth(line);
-                int pad = Math.Max(0, (windowWidth - dw) / 2);
                 int row = startRow + i;
                 if (row >= 0 && row < Console.WindowHeight)
                 {
