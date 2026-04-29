@@ -297,7 +297,7 @@ public sealed partial class AdminPortal
             }
         }
 
-        string hilfe = "+/- = Lautstaerke   N = naechster Song   P = vorheriger Song   M = Musik-Ordner waehlen   Klick = Enter";
+        string hilfe = "+/- = Lautstaerke   N = naechster Song   P = vorheriger Song   M = Musik-Ordner wählen   Klick = Enter";
         if (hilfe.Length > breite - 2)
             hilfe = hilfe[..(breite - 2)];
         Console.SetCursorPosition(1, hoehe - 2);

@@ -184,7 +184,7 @@ public sealed partial class AdminPortal
         _adminMenuLastSystemBarMs = Environment.TickCount64;
     }
 
-    // Sondertasten fuer das Retro-Hauptmenue: Lautstaerke und Song-Text.
+    // Sondertasten für das Retro-Hauptmenue: Lautstärke und Song-Text.
     private bool HandleAdminRetroHotkey(ConsoleInputWindows.KeyEventRecord key)
     {
         ushort vk = key.VirtualKeyCode;
@@ -223,7 +223,7 @@ public sealed partial class AdminPortal
         return false;
     }
 
-    // Sondertasten fuer das Retro-Hauptmenue (ConsoleKeyInfo-Variante).
+    // Sondertasten für das Retro-Hauptmenü (ConsoleKeyInfo-Variante).
     private bool HandleAdminRetroHotkey(ConsoleKeyInfo key)
     {
         if (key.Key == ConsoleKey.Add || key.KeyChar == '+')
@@ -240,19 +240,19 @@ public sealed partial class AdminPortal
 
         if (key.Key == ConsoleKey.N)
         {
-            SetAdminRetroSongText("♪ Naechster Song (Demo)");
+            SetAdminRetroSongText("♪ Nächster Song");
             return true;
         }
 
         if (key.Key == ConsoleKey.P)
         {
-            SetAdminRetroSongText("♪ Vorheriger Song (Demo)");
+            SetAdminRetroSongText("♪ Vorheriger Song");
             return true;
         }
 
         if (key.Key == ConsoleKey.M)
         {
-            SetAdminRetroSongText("♪ Musik-Ordner: waehlen...");
+            SetAdminRetroSongText("♪ Musik-Ordner: wählen...");
             return true;
         }
 

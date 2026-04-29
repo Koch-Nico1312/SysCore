@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Versioning;
 using System.Text;
@@ -375,53 +375,106 @@ public sealed partial class AdminPortal
 
         return ConsoleColor.Gray;
     }
-
-    // Spielt eine MP3-Datei ab.
-    // Hinweis: NAudio ist eine externe Bibliothek für Audio.
+    // Spielt alle MP3-Dateien aus einem Ordner ab (Shuffle, Next, Prev, Pause, Stop).
     private void RunMusicPlayer()
     {
-        Console.WriteLine("=== Musik Player (MP3) ===");
-        Console.Write("Pfad zur MP3: ");
+        Console.WriteLine("=== Musik Player (Ordner) ===");
+        Console.Write("Pfad zum MP3-Ordner: ");
         string? p = Console.ReadLine();
-        string roh = p ?? "";
-        string pfad = MusikPfadBereinigen(roh);
-        if (!File.Exists(pfad))
+        string ordner = MusikPfadBereinigen(p ?? "");
+
+        if (!Directory.Exists(ordner))
         {
-            Console.WriteLine("Datei nicht gefunden.");
+            Console.WriteLine("Ordner nicht gefunden.");
             return;
         }
 
-        using WaveOutEvent ausgabe = new();
-        using AudioFileReader reader = new(pfad);
-        ausgabe.Init(reader);
-        ausgabe.Play();
-        Console.WriteLine("Wiedergabe — Taste zum Stoppen.");
-        RunMusicPlaybackLoop(ausgabe);
-        ausgabe.Stop();
+        string[] dateien = Directory.GetFiles(ordner, "*.mp3", SearchOption.TopDirectoryOnly);
+        if (dateien.Length == 0)
+        {
+            Console.WriteLine("Keine MP3-Dateien im Ordner gefunden.");
+            return;
+        }
+
+        Random rng = new();
+        List<string> playlist = [.. dateien.OrderBy(_ => rng.Next())];
+
+        Console.WriteLine($"{playlist.Count} Songs geladen — Steuerung:");
+        Console.WriteLine("  [N] Naechster  [P] Vorheriger  [S] Pause/Weiter  [Q] Beenden");
+        Console.WriteLine();
+
+        RunMusicFolderLoop(playlist);
     }
 
-    // Entfernt unnötige Anführungszeichen am Pfad.
+    // Hauptschleife: spielt Songs der Reihe nach ab.
+    private static void RunMusicFolderLoop(List<string> playlist)
+    {
+        int index = 0;
+        bool laeuft = true;
+
+        while (laeuft && index < playlist.Count)
+        {
+            string datei = playlist[index];
+            Console.WriteLine($"  Spielt: {Path.GetFileNameWithoutExtension(datei)}");
+
+            using WaveOutEvent ausgabe = new();
+            using AudioFileReader reader = new(datei);
+            ausgabe.Init(reader);
+            ausgabe.Play();
+
+            bool vorheriger = false;
+
+            while (ausgabe.PlaybackState == PlaybackState.Playing ||
+                   ausgabe.PlaybackState == PlaybackState.Paused)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKey taste = Console.ReadKey(intercept: true).Key;
+                    switch (taste)
+                    {
+                        case ConsoleKey.N:
+                            goto SongEnde;
+                        case ConsoleKey.P:
+                            vorheriger = true;
+                            goto SongEnde;
+                        case ConsoleKey.S:
+                            if (ausgabe.PlaybackState == PlaybackState.Playing)
+                            {
+                                ausgabe.Pause();
+                                Console.WriteLine("  [Pausiert]");
+                            }
+                            else
+                            {
+                                ausgabe.Play();
+                                Console.WriteLine("  [Weiter]");
+                            }
+                            break;
+                        case ConsoleKey.Q:
+                            laeuft = false;
+                            goto SongEnde;
+                    }
+                }
+                Thread.Sleep(50);
+            }
+
+            SongEnde:
+            ausgabe.Stop();
+
+            if (!laeuft) break;
+            if (vorheriger) index = Math.Max(0, index - 1);
+            else index++;
+        }
+
+        Console.WriteLine("Musik Player beendet.");
+    }
+
+    // Entfernt Anfuehrungszeichen am Pfad.
     private static string MusikPfadBereinigen(string roh)
     {
         string t = roh.Trim();
         if (t.Length >= 2 && t[0] == '"' && t[^1] == '"')
             t = t[1..^1];
         return t;
-    }
-
-    // Wartet auf Tastendruck zum Stoppen der Wiedergabe.
-    private static void RunMusicPlaybackLoop(WaveOutEvent output)
-    {
-        while (output.PlaybackState == PlaybackState.Playing)
-        {
-            if (Console.KeyAvailable)
-            {
-                Console.ReadKey(intercept: true);
-                break;
-            }
-
-            Thread.Sleep(50);
-        }
     }
 }
 
