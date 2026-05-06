@@ -55,22 +55,10 @@ public sealed partial class AdminPortal
                 continue;
             }
 
-            // 3 = PC -> bestehende Programmliste
+            // 3 = Admin Tools -> verschachtelte Kategorien
             if (mainSelection == 3)
             {
-                bool backToPrograms = false;
-                while (!backToPrograms)
-                {
-                    int selectedProgram = ShowProgramListAndSelect();
-                    if (selectedProgram < 0 || selectedProgram >= AdminProgramEntries.Length)
-                    {
-                        backToPrograms = true;
-                        continue;
-                    }
-
-                    StartProgramByIndex(selectedProgram);
-                    WaitForContinue();
-                }
+                RunToolCategoryMenu();
                 continue;
             }
 
@@ -108,7 +96,7 @@ public sealed partial class AdminPortal
         {
             foreach (string bannerLine in AdminHauptmenüAsciiBanner)
                 Console.Out.WriteLine(bannerLine);
-            Console.Out.WriteLine("1) Programme starten");
+            Console.Out.WriteLine("1) Admin Tools (Kategorien)");
             Console.Out.WriteLine("2) Beenden");
             Console.Out.Write("Wahl: ");
             string? w = Console.ReadLine();
@@ -122,36 +110,46 @@ public sealed partial class AdminPortal
             if (wahl != "1")
                 continue;
 
-            bool goBack = false;
-            while (!goBack)
+            RunToolCategoryMenuTextOnly();
+        }
+    }
+
+    private void RunToolCategoryMenuTextOnly()
+    {
+        bool backToCategories = false;
+        while (!backToCategories)
+        {
+            Console.Out.WriteLine("--- Kategorien ---");
+            for (int i = 0; i < CategoryNames.Length; i++)
+                Console.Out.WriteLine($"{i + 1,2}) {CategoryNames[i]}");
+            Console.Out.WriteLine(" 0) Zurück");
+            Console.Out.Write("Wahl: ");
+            string? c = Console.ReadLine();
+            string cw = c?.Trim() ?? "";
+            if (cw == "0") { backToCategories = true; continue; }
+            if (!int.TryParse(cw, out int catIdx) || catIdx < 1 || catIdx > CategoryNames.Length)
+                continue;
+            catIdx--;
+
+            int[] tools = CategoryToolIndices[catIdx];
+            bool backToTools = false;
+            while (!backToTools)
             {
-                ShowProgramMenuTextOnly();
-                Console.Out.Write("Nummer (0 = Zurück): ");
-                string? p = Console.ReadLine();
-                string num = p?.Trim() ?? "";
-                if (num == "0")
-                {
-                    goBack = true;
+                Console.Out.WriteLine($"--- {CategoryNames[catIdx]} ---");
+                for (int i = 0; i < tools.Length; i++)
+                    Console.Out.WriteLine($"{i + 1,2}) {AdminProgramEntries[tools[i]]}");
+                Console.Out.WriteLine(" 0) Zurück");
+                Console.Out.Write("Wahl: ");
+                string? t = Console.ReadLine();
+                string tw = t?.Trim() ?? "";
+                if (tw == "0") { backToTools = true; continue; }
+                if (!int.TryParse(tw, out int toolIdx) || toolIdx < 1 || toolIdx > tools.Length)
                     continue;
-                }
-
-                if (!int.TryParse(num, out int idx) || idx < 1 || idx > AdminProgramEntries.Length)
-                    continue;
-
-                StartProgramByIndex(idx - 1);
+                StartProgramByIndex(tools[toolIdx - 1]);
                 Console.Out.WriteLine("Enter für weiter…");
                 Console.ReadLine();
             }
         }
-    }
-
-    // Zeigt die Programmliste in der Text-Variante.
-    private static void ShowProgramMenuTextOnly()
-    {
-        Console.Out.WriteLine("--- Programme ---");
-        for (int i = 0; i < AdminProgramEntries.Length; i++)
-            Console.Out.WriteLine($"{i + 1,2}) {AdminProgramEntries[i]}");
-        Console.Out.WriteLine(" 0) Zurück");
     }
 
     // Grundzustand der Konsole (Farben/Mausmodus) vorbereiten.
@@ -200,6 +198,20 @@ public sealed partial class AdminPortal
                 case 18: RunExpenseTracker(); break;
                 case 19: RunExternalProgramLauncher(); break;
                 case 20: RunGeminiChatModule(); break;
+                case 21: RunPomodoroTimer(); break;
+                case 22: RunContactBook(); break;
+                case 23: RunHashGenerator(); break;
+                case 24: RunBase64Tool(); break;
+                case 25: RunPasswordStrengthChecker(); break;
+                case 26: RunProcessLister(); break;
+                case 27: RunFileBrowser(); break;
+                case 28: RunDuplicateFinder(); break;
+                case 29: RunPortScanner(); break;
+                case 30: RunHttpClientTool(); break;
+                case 31: RunSnakeGame(); break;
+                case 32: RunRockPaperScissors(); break;
+                case 33: RunRandomGenerator(); break;
+                case 34: RunBmiCalculator(); break;
             }
 
             return;
@@ -231,6 +243,20 @@ public sealed partial class AdminPortal
             case 18: RunExpenseTracker(); break;
             case 19: RunExternalProgramLauncher(); break;
             case 20: RunGeminiChatModule(); break;
+            case 21: RunPomodoroTimer(); break;
+            case 22: RunContactBook(); break;
+            case 23: RunHashGenerator(); break;
+            case 24: RunBase64Tool(); break;
+            case 25: RunPasswordStrengthChecker(); break;
+            case 26: RunProcessLister(); break;
+            case 27: RunFileBrowser(); break;
+            case 28: RunDuplicateFinder(); break;
+            case 29: RunPortScanner(); break;
+            case 30: RunHttpClientTool(); break;
+            case 31: RunSnakeGame(); break;
+            case 32: RunRockPaperScissors(); break;
+            case 33: RunRandomGenerator(); break;
+            case 34: RunBmiCalculator(); break;
         }
     }
 
@@ -249,7 +275,7 @@ public sealed partial class AdminPortal
         "Youtube schauen",
         "Serie schauen",
         "Schule",
-        "PC",
+        "Admin Tools",
         "Farbthema waehlen",
         "Musik",
         "Beenden"
@@ -277,7 +303,41 @@ public sealed partial class AdminPortal
         "❓ Quiz",
         "📊 Ausgaben-Tracker",
         "🚀 Programmstarter",
-        "🤖 Gemini AI Chat"
+        "🤖 Gemini AI Chat",
+        "⏱️ Pomodoro-Timer",
+        "📇 Kontaktbuch",
+        "#️⃣ Hash-Generator",
+        "🔤 Base64 En/Decoder",
+        "🔒 Passwort-Stärke-Checker",
+        "📈 Prozess-Lister",
+        "📁 Datei-Browser",
+        "🔍 Duplicate Finder",
+        "🔌 Port-Scanner",
+        "🌐 HTTP-Client",
+        "🐍 Snake",
+        "✊ Schere-Stein-Papier",
+        "🎰 Zufallsgenerator",
+        "⚖️ BMI / Fitness-Rechner"
+    ];
+
+    private static readonly string[] CategoryNames =
+    [
+        "🗂️  Produktivität",
+        "🛠️  Tools & Rechner",
+        "💻 System & Netzwerk",
+        "🎨 Kreativ & Spiele",
+        "💰 Finanzen",
+        "🌐 Web, Medien & AI"
+    ];
+
+    private static readonly int[][] CategoryToolIndices =
+    [
+        [0, 1, 2, 3, 21, 22],
+        [4, 5, 6, 7, 8, 9, 10, 15, 23, 24, 25],
+        [11, 26, 27, 28, 29, 30],
+        [12, 13, 14, 16, 17, 31, 32, 33],
+        [18],
+        [19, 20]
     ];
 
     // Öffnet eine Webseite im Standardbrowser.

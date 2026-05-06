@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "kDkqxjs8TMg=",
+  "dgSpecHash": "rcXG3P36sDE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nico\\Desktop\\SySCore\\LoginPage\\LoginPage.csproj",
+  "projectFilePath": "c:\\Users\\Nico\\Desktop\\SysCore\\LoginPage\\LoginPage.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.11\\microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
-    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.11\\microsoft.windowsdesktop.app.ref.9.0.11.nupkg.sha512",
-    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.11\\microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512"
+    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.15\\microsoft.netcore.app.ref.9.0.15.nupkg.sha512",
+    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.15\\microsoft.windowsdesktop.app.ref.9.0.15.nupkg.sha512",
+    "C:\\Users\\Nico\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.15\\microsoft.aspnetcore.app.ref.9.0.15.nupkg.sha512"
   ],
   "logs": []
 }

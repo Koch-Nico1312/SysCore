@@ -19,7 +19,7 @@ SysCore ist eine vollständige Konsolenanwendung, die nach einem animierten Star
 | **Login** | Namenseingabe mit zentrierter Ausgabe; Admin-Erkennung (case-insensitive) |
 | **Admin-Portal** | Animiertes Hauptmenü mit Mausunterstützung + Live-Systemleiste |
 | **Casual-Portal** | Eigenständiges Menü mit Endnutzer-Tools (Notizen, Rechner, Timer u. v. m.) |
-| **19 Admin-Programme** | Siehe Liste unten |
+| **35 Admin-Programme** | In 6 Kategorien verschachtelt, siehe unten |
 
 ---
 
@@ -52,8 +52,14 @@ SysCore/
 │   ├── AdminPortal.Productivity.cs ← Task Manager, Notizbuch, Passwort Manager, Kalender
 │   ├── AdminPortal.Storage.cs      ← AppData-Pfade, XOR/SHA-256-Verschlüsselung
 │   ├── AdminPortal.SystemCreative.cs← System Monitor, ASCII Art, Farbpalette, Musik Player
-│   ├── AdminPortal.Tools.cs        ← Rechner, Caesar, QR, Währung, Datum, Text, Weltzeit,
-│   │                                  Würfelsimulator, Quiz, Ausgaben-Tracker
+│   ├── AdminPortal.Tools.cs        ← Rechner, Caesar, QR, Währung, Datum, Text
+│   ├── AdminPortal.ExtraTools.cs   ← Weltzeit, Würfelsimulator, Quiz, Ausgaben-Tracker
+│   ├── AdminPortal.NewTools.cs     ← Pomodoro, Kontaktbuch, Hash, Base64, Passwort-Stärke,
+│   │                                  Prozess-Lister, Datei-Browser, Duplicate Finder, Port-Scanner,
+│   │                                  HTTP-Client, Snake, Schere-Stein-Papier, Zufallsgenerator, BMI
+│   ├── AdminPortal.ExternalApps.cs ← Externe Programme starten (Notepad, Explorer, eigene exe)
+│   ├── AdminPortal.AI.cs           ← Gemini AI Chat UI
+│   ├── AdminPortal.FileReadHelpers.cs ← Sicheres Lesen von txt/json
 │   └── ConsoleInputWindows.cs      ← Windows-API für Tastatur- und Mauseingabe
 │
 └── casualUser/
@@ -66,7 +72,21 @@ SysCore/
 
 ## Download
 [SysCore.exe herunterladen](https://github.com/Koch-Nico1312/SysCore/releases/tag/v.1.0.1)
+
 ---
+
+## Admin-Portal — Menü-Struktur
+
+Das Admin-Portal bietet ein **zweistufiges Kategorie-Menü** über den Punkt **"Admin Tools"**:
+
+| Kategorie | Programme |
+|---|---|
+| **Produktivität** | Task Manager, Notizbuch, Passwort Manager, Kalender, Pomodoro-Timer, Kontaktbuch |
+| **Tools & Rechner** | Einheitenrechner, Taschenrechner, Caesar, Text Analyzer, Währungsrechner, QR-Code, Datumrechner, Weltzeit, Hash-Generator, Base64, Passwort-Stärke-Checker |
+| **System & Netzwerk** | System Monitor, Prozess-Lister, Datei-Browser, Duplicate Finder, Port-Scanner, HTTP-Client |
+| **Kreativ & Spiele** | ASCII Art, Farbpaletten, Musik Player, Würfelsimulator, Quiz, Snake, Schere-Stein-Papier, Zufallsgenerator |
+| **Finanzen** | Ausgaben-Tracker |
+| **Web, Medien & AI** | Programmstarter, Gemini AI Chat |
 
 ## Bedienung
 
@@ -154,6 +174,55 @@ Interaktives Multiple-Choice-Quiz direkt in der Konsole.
 ### 19. Ausgaben-Tracker
 Einnahmen und Ausgaben erfassen und eine Übersicht anzeigen lassen.
 
+### 20. Programmstarter
+Startet Notepad, Explorer oder eine beliebige `.exe`-Datei.
+
+### 21. Gemini AI Chat
+Interaktiver Chat mit der Google Gemini API. API-Key und Modell werden in `config.json` gespeichert. Verlauf und Befehle (`clear`, `exit`) werden unterstützt.
+
+### 22. Pomodoro-Timer
+Countdown-Timer mit einstellbarer Dauer (Standard 25 Min). Live-Aktualisierung in der Konsole, beliebige Taste bricht ab.
+
+### 23. Kontaktbuch
+Kontakte (Name, Telefon, E-Mail, Notiz) anlegen, auflisten, durchsuchen und löschen.  
+Speicherort: `%APPDATA%\SysCore\admin_kontakte.txt`
+
+### 24. Hash-Generator
+Erzeugt MD5, SHA-1, SHA-256 oder SHA-512 Hashes für beliebigen Text.
+
+### 25. Base64 En/Decoder
+Text oder ganze Dateien in Base64 umwandeln und zurück decodieren.
+
+### 26. Passwort-Stärke-Checker
+Bewertet Passwörter nach Länge, Zeichenarten und Entropie (Score 0–6).
+
+### 27. Prozess-Lister *(Windows only)*
+Zeigt bis zu 50 laufende Prozesse mit PID und RAM an. Einzelne Prozesse können beendet werden.
+
+### 28. Datei-Browser
+Navigierbarer Konsolen-Tree: Ordner durchsuchen, Dateigrößen anzeigen, rein/hoch navigieren.
+
+### 29. Duplicate Finder
+Sucht nach Datei-Duplikaten per SHA-256-Hash in einem gewählten Ordner (rekursiv).
+
+### 30. Port-Scanner
+Prüft via TCP-Connect, ob gängige Ports (z. B. 80, 443, 3306) auf einer IP/Host offen sind.
+
+### 31. HTTP-Client
+Einfache GET/POST-Anfragen an URLs. JSON-Antworten werden pretty-printed ausgegeben.
+
+### 32. Snake
+Klassisches Snake-Spiel direkt in der Konsole — Steuerung mit den Pfeiltasten.
+
+### 33. Schere-Stein-Papier
+Interaktives Spiel gegen den Computer mit persistenter Statistik und Winrate.
+
+### 34. Zufallsgenerator
+Generiert zufällige Passwörter, UUIDs, Lottozahlen (6 aus 45) oder Zahlen in einem Bereich.
+
+### 35. BMI / Fitness-Rechner
+Berechnet BMI mit Kategorie und schätzt den täglichen Grundumsatz (Harris-Benedict) abhängig von Geschlecht und Alter.
+
 ---
 
 ## Datenspeicherung
@@ -164,6 +233,10 @@ Alle persistenten Daten werden unter `%APPDATA%\SysCore\` gespeichert und beim e
 %APPDATA%\SysCore\
 ├── admin_aufgaben.txt          ← Task Manager
 ├── admin_passwort_tresor.txt   ← Passwort Manager (XOR-verschlüsselt)
+├── admin_ausgaben.txt          ← Ausgaben-Tracker
+├── admin_kontakte.txt          ← Kontaktbuch
+├── admin_rps_stats.txt         ← Schere-Stein-Papier Statistik
+├── config.json                 ← Gemini API-Key + Modell
 └── notizen/
     └── *.txt                   ← Notizbuch-Einträge
 ```

@@ -13,17 +13,35 @@ public sealed partial class AdminPortal
         return RunMenu("Admin — Hauptmenü", MainMenuItems, indexOnEscape: 6, isAdminMainMenuAscii: true);
     }
 
-    // Baut die Programmliste plus "Zurück" und gibt die Auswahl zurück.
-    private int ShowProgramListAndSelect()
+    // Verschachteltes Kategorie-Menü für Admin Tools.
+    private void RunToolCategoryMenu()
     {
-        string[] entries = new string[AdminProgramEntries.Length + 1];
-        for (int i = 0; i < AdminProgramEntries.Length; i++)
-            entries[i] = AdminProgramEntries[i];
-        entries[entries.Length - 1] = "<< Zurück";
-        int selected = RunMenu("Programme starten", entries, indexOnEscape: entries.Length - 1, isAdminMainMenuAscii: true);
-        if (selected == entries.Length - 1)
-            return -1;
-        return selected;
+        bool back = false;
+        while (!back)
+        {
+            string[] cats = new string[CategoryNames.Length + 1];
+            for (int i = 0; i < CategoryNames.Length; i++)
+                cats[i] = CategoryNames[i];
+            cats[cats.Length - 1] = "<< Zurück";
+            int cat = RunMenu("Admin Tools — Kategorien", cats, indexOnEscape: cats.Length - 1, isAdminMainMenuAscii: false);
+            if (cat < 0 || cat >= CategoryNames.Length)
+            {
+                back = true;
+                continue;
+            }
+
+            int[] tools = CategoryToolIndices[cat];
+            string[] entries = new string[tools.Length + 1];
+            for (int i = 0; i < tools.Length; i++)
+                entries[i] = AdminProgramEntries[tools[i]];
+            entries[entries.Length - 1] = "<< Zurück";
+            int sel = RunMenu(CategoryNames[cat], entries, indexOnEscape: entries.Length - 1, isAdminMainMenuAscii: false);
+            if (sel < 0 || sel >= tools.Length)
+                continue;
+
+            StartProgramByIndex(tools[sel]);
+            WaitForContinue();
+        }
     }
 
     // Die eigentliche Menue-Schleife.
